@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.repositionSidenotes = exports.deselectSidenote = exports.disconnectAnchor = exports.disconnectSidenote = exports.selectAnchor = exports.selectSidenote = exports.updateSidenote = exports.connectAnchorBase = exports.connectAnchor = exports.connectSidenote = void 0;
+exports.repositionSidenotes = exports.deselectSidenote = exports.resetAllSidenotes = exports.disconnectAnchor = exports.disconnectSidenote = exports.selectAnchor = exports.selectSidenote = exports.updateSidenote = exports.connectAnchorBase = exports.connectAnchor = exports.connectSidenote = void 0;
 const uuid_1 = require("uuid");
 const types_1 = require("./types");
 function connectSidenote(docId, sidenoteId, baseId) {
@@ -100,6 +100,15 @@ function disconnectAnchor(docId, anchor) {
     };
 }
 exports.disconnectAnchor = disconnectAnchor;
+function resetAllSidenotes() {
+    return (dispatch) => {
+        dispatch({
+            type: types_1.UI_RESET_ALL_SIDENOTES,
+            payload: {},
+        });
+    };
+}
+exports.resetAllSidenotes = resetAllSidenotes;
 function deselectSidenote(docId) {
     return {
         type: types_1.UI_DESELECT_SIDENOTE,

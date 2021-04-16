@@ -34,11 +34,6 @@ exports.AnchorBase = (props) => {
     const dispatch = react_redux_1.useDispatch();
     const [doc, setDoc] = react_1.useState();
     const [ref, setRef] = react_1.useState(null);
-    react_1.useEffect(() => {
-        if (ref == null || doc == null)
-            return () => { };
-        return () => dispatch(actions_1.disconnectAnchor(doc, ref));
-    }, [doc, ref]);
     const selected = react_redux_1.useSelector((state) => selectors_1.isSidenoteSelected(state, doc, anchor));
     const onRef = react_1.useCallback((el) => {
         setRef(el);
@@ -48,14 +43,6 @@ exports.AnchorBase = (props) => {
             dispatch(actions_1.connectAnchorBase(parentDoc, anchor, el));
         }
     }, []);
-    react_1.useEffect(() => {
-        if (!ref)
-            return () => null;
-        return () => {
-            const parentDoc = utils_1.getDoc(ref);
-            return dispatch(actions_1.disconnectAnchor(parentDoc, ref));
-        };
-    }, [ref]);
     const classes = classnames_1.default({ selected, [className !== null && className !== void 0 ? className : '']: Boolean(className) });
     return (react_1.default.createElement("div", { className: classes, ref: onRef }, children));
 };

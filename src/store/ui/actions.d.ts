@@ -7,5 +7,6 @@ export declare function selectSidenote(docId?: string, sidenoteId?: string): App
 export declare function selectAnchor(docId?: string, anchor?: HTMLElement | null): AppThunk<void>;
 export declare function disconnectSidenote(docId?: string, sidenoteId?: string): AppThunk<void>;
 export declare function disconnectAnchor(docId?: string, anchor?: HTMLElement | null): AppThunk<void>;
+export declare function resetAllSidenotes(): AppThunk<void>;
 export declare function deselectSidenote(docId: string): SidenotesUIActions;
 export declare function repositionSidenotes(docId: string): SidenotesUIActions;

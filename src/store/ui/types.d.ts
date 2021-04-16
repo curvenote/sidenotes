@@ -9,6 +9,7 @@ export declare const UI_DESELECT_SIDENOTE = "UI_DESELECT_SIDENOTE";
 export declare const UI_SELECT_ANCHOR = "UI_SELECT_ANCHOR";
 export declare const UI_UPDATE_COMMENT = "UI_UPDATE_COMMENT";
 export declare const UI_REPOSITION_SIDENOTES = "UI_REPOSITION_SIDENOTES";
+export declare const UI_RESET_ALL_SIDENOTES = "UI_RESET_ALL_SIDENOTES";
 export declare type Sidenote = {
     id: string;
     baseAnchors: string[];
@@ -45,6 +46,9 @@ export interface DisconnectAnchorAction {
         docId: string;
         anchorId: string;
     };
+}
+export interface ResetAllSidenotesAction {
+    type: typeof UI_RESET_ALL_SIDENOTES;
 }
 export interface ConnectAnchorAction {
     type: typeof UI_CONNECT_ANCHOR;
@@ -96,4 +100,4 @@ export interface RepositionSidenotesAction {
         docId: string;
     };
 }
-export declare type UIActionTypes = (ConnectSidenoteAction | DisconnectSidenoteAction | ConnectAnchorAction | ConnectAnchorBaseAction | DisconnectAnchorAction | SelectSidenoteAction | SelectAnchorAction | DeselectSidenoteAction | RepositionSidenotesAction);
+export declare type UIActionTypes = (ConnectSidenoteAction | DisconnectSidenoteAction | ConnectAnchorAction | ConnectAnchorBaseAction | DisconnectAnchorAction | SelectSidenoteAction | SelectAnchorAction | DeselectSidenoteAction | RepositionSidenotesAction | ResetAllSidenotesAction);

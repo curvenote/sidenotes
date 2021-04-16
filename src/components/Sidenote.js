@@ -33,7 +33,6 @@ exports.Sidenote = (props) => {
     const { base, sidenote, children } = props;
     const dispatch = react_redux_1.useDispatch();
     const [doc, setDoc] = react_1.useState();
-    react_1.useEffect(() => () => { dispatch(actions_1.disconnectSidenote(doc, sidenote)); }, []);
     const selected = react_redux_1.useSelector((state) => selectors_1.isSidenoteSelected(state, doc, sidenote));
     const top = react_redux_1.useSelector((state) => selectors_1.sidenoteTop(state, doc, sidenote));
     const onClick = react_1.useCallback((event) => {

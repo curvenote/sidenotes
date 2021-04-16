@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const types_1 = require("./types");
 const docReducer = (state, action) => {
     var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l;
-    if (state == null) {
+    if (state == null && action.type !== types_1.UI_RESET_ALL_SIDENOTES) {
         const { docId } = action.payload;
         state = {
             id: docId,

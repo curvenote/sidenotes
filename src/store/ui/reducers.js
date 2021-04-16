@@ -87,6 +87,9 @@ const uiReducer = (state = exports.initialState, action) => {
                 const nextDoc = placeSidenotes(docReducer_1.default(state.docs[docId], action), action.type);
                 return Object.assign(Object.assign({}, state), { docs: Object.assign(Object.assign({}, state.docs), { [docId]: nextDoc }) });
             }
+        case types_1.UI_RESET_ALL_SIDENOTES: {
+            return Object.assign(Object.assign({}, state), { docs: {} });
+        }
         default:
             return state;
     }
