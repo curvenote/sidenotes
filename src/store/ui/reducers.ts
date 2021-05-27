@@ -29,8 +29,6 @@ function getTopLeft(anchor?: Anchor) {
 }
 
 function placeSidenotes(state: DocState, actionType: string): DocState {
-  // Do not place comments if it is a deselect call
-  if (actionType === UI_DESELECT_SIDENOTE) return state;
   type Loc = [string, { top: number; left: number; height: number }];
   let findMe: Loc | undefined;
   const sorted = Object.entries(state.sidenotes).map(
