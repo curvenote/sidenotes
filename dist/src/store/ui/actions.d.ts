@@ -1,5 +1,5 @@
 import { AppThunk, SidenotesUIActions } from '../types';
-export declare function connectSidenote(docId?: string, sidenoteId?: string, baseId?: string): AppThunk<void>;
+export declare function connectSidenote(docId?: string, sidenoteId?: string, baseId?: string, el?: HTMLDivElement): AppThunk<void>;
 export declare function connectAnchor(docId?: string, sidenoteId?: string, element?: HTMLElement): AppThunk<void>;
 export declare function connectAnchorBase(docId?: string, anchorId?: string, element?: HTMLElement): AppThunk<void>;
 export declare function updateSidenote(docId: string, sidenoteId: string): SidenotesUIActions;

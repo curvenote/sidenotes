@@ -27,11 +27,24 @@ function getTopLeft(anchor) {
     return { top, left };
 }
 function placeSidenotes(state, actionType) {
+    var _a;
     let findMe;
+    let boundaryElementTop;
+    if (connect_1.opts.preserveBoundaries) {
+        for (const [, sidenote] of Object.entries(state.sidenotes)) {
+            if (sidenote && sidenote.element) {
+                const boundaryElement = (_a = sidenote.element) === null || _a === void 0 ? void 0 : _a.closest('[data-sidenotes-boundary]');
+                if (boundaryElement) {
+                    boundaryElementTop = boundaryElement.offsetTop;
+                }
+                break;
+            }
+        }
+    }
     const sorted = Object.entries(state.sidenotes).map(([id, cmt]) => {
         var _a, _b, _c;
         const anchor = (_b = state.anchors[(_a = cmt.inlineAnchors) === null || _a === void 0 ? void 0 : _a[0]]) !== null && _b !== void 0 ? _b : state.anchors[(_c = cmt.baseAnchors) === null || _c === void 0 ? void 0 : _c[0]];
-        const loc = [id, Object.assign(Object.assign({}, getTopLeft(anchor)), { height: getHeight(id) })];
+        const loc = [id, Object.assign(Object.assign({}, getTopLeft(anchor)), { height: getHeight(id), boundaryElementTop })];
         if (id === state.selectedSidenote) {
             findMe = loc;
         }
@@ -42,17 +55,23 @@ function placeSidenotes(state, actionType) {
         return a[1].top - b[1].top;
     });
     const idx = findMe ? sorted.indexOf(findMe) : 0;
-    const before = sorted.slice(0, idx + 1).reduceRight((prev, [id, loc]) => {
+    const before = sorted.slice(0, idx + 1).reduceRight((prev, [id, loc], index) => {
         var _a, _b;
         const { top } = (_b = (_a = prev[prev.length - 1]) === null || _a === void 0 ? void 0 : _a[1]) !== null && _b !== void 0 ? _b : {};
-        const newTop = Math.min(top - loc.height - connect_1.opts.padding, loc.top) || loc.top;
+        let newTop = Math.min(top - loc.height - connect_1.opts.padding, loc.top) || loc.top;
+        if (connect_1.opts.preserveBoundaries && loc.boundaryElementTop) {
+            newTop = Math.max(newTop, loc.boundaryElementTop + index * connect_1.opts.padding);
+        }
         const next = [id, { top: newTop, height: loc.height }];
         return [...prev, next];
     }, []);
     const after = sorted.slice(idx).reduce((prev, [id, loc]) => {
         var _a, _b;
         const { top, height } = (_b = (_a = prev[prev.length - 1]) === null || _a === void 0 ? void 0 : _a[1]) !== null && _b !== void 0 ? _b : {};
-        const newTop = Math.max(top + height + connect_1.opts.padding, loc.top) || loc.top;
+        let newTop = Math.max(top + height + connect_1.opts.padding, loc.top) || loc.top;
+        if (connect_1.opts.preserveBoundaries && loc.boundaryElementTop) {
+            newTop = Math.max(newTop, loc.boundaryElementTop);
+        }
         const next = [id, { top: newTop, height: loc.height }];
         return [...prev, next];
     }, []);

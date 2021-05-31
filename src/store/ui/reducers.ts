@@ -29,12 +29,28 @@ function getTopLeft(anchor?: Anchor) {
 }
 
 function placeSidenotes(state: DocState, actionType: string): DocState {
-  type Loc = [string, { top: number; left: number; height: number }];
+  type Loc = [string, { top: number; left: number; height: number, boundaryElementTop?: number }];
   let findMe: Loc | undefined;
+
+  let boundaryElementTop: number;
+
+  if (opts.preserveBoundaries) {
+    // eslint-disable-next-line no-restricted-syntax
+    for (const [, sidenote] of Object.entries(state.sidenotes)) {
+      if (sidenote && sidenote.element) {
+        const boundaryElement = sidenote.element?.closest('[data-sidenotes-boundary]') as HTMLElement | null;
+        if (boundaryElement) {
+          boundaryElementTop = boundaryElement.offsetTop;
+        }
+        break;
+      }
+    }
+  }
+
   const sorted = Object.entries(state.sidenotes).map(
     ([id, cmt]) => {
       const anchor = state.anchors[cmt.inlineAnchors?.[0]] ?? state.anchors[cmt.baseAnchors?.[0]];
-      const loc: Loc = [id, { ...getTopLeft(anchor), height: getHeight(id) }];
+      const loc: Loc = [id, { ...getTopLeft(anchor), height: getHeight(id), boundaryElementTop }];
       if (id === state.selectedSidenote) { findMe = loc; }
       return loc;
     },
@@ -45,9 +61,12 @@ function placeSidenotes(state: DocState, actionType: string): DocState {
 
   const idx = findMe ? sorted.indexOf(findMe) : 0;
   // Push upwards from target (or nothing)
-  const before = sorted.slice(0, idx + 1).reduceRight((prev, [id, loc]) => {
+  const before = sorted.slice(0, idx + 1).reduceRight((prev, [id, loc], index) => {
     const { top } = prev[prev.length - 1]?.[1] ?? {};
-    const newTop = Math.min(top - loc.height - opts.padding, loc.top) || loc.top;
+    let newTop = Math.min(top - loc.height - opts.padding, loc.top) || loc.top;
+    if (opts.preserveBoundaries && loc.boundaryElementTop) {
+      newTop = Math.max(newTop, loc.boundaryElementTop + index * opts.padding);
+    }
     const next = [id, { top: newTop, height: loc.height }] as Loc;
     return [...prev, next];
   }, [] as Loc[]);
@@ -55,7 +74,10 @@ function placeSidenotes(state: DocState, actionType: string): DocState {
   // Push comments downward
   const after = sorted.slice(idx).reduce((prev, [id, loc]) => {
     const { top, height } = prev[prev.length - 1]?.[1] ?? {};
-    const newTop = Math.max(top + height + opts.padding, loc.top) || loc.top;
+    let newTop = Math.max(top + height + opts.padding, loc.top) || loc.top;
+    if (opts.preserveBoundaries && loc.boundaryElementTop) {
+      newTop = Math.max(newTop, loc.boundaryElementTop);
+    }
     const next = [id, { top: newTop, height: loc.height }] as Loc;
     return [...prev, next];
   }, [] as Loc[]);

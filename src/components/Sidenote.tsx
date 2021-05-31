@@ -6,6 +6,7 @@ import { connectSidenote, disconnectSidenote, selectSidenote } from '../store/ui
 import { sidenoteTop, isSidenoteSelected } from '../store/ui/selectors';
 import { Dispatch, State } from '../store';
 import { getDoc } from './utils';
+import { opts } from '../connect';
 
 
 type Props = {
@@ -20,7 +21,7 @@ export const Sidenote = (props: Props) => {
   const [doc, setDoc] = useState<string>();
 
   const selected = useSelector((state: State) => isSidenoteSelected(state, doc, sidenote));
-  const top = useSelector((state: State) => sidenoteTop(state, doc, sidenote));
+  let top = useSelector((state: State) => sidenoteTop(state, doc, sidenote));
   const onClick = useCallback((event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     event.stopPropagation();
     if (selected) return;
@@ -30,9 +31,14 @@ export const Sidenote = (props: Props) => {
     const parentDoc = getDoc(el);
     if (parentDoc) {
       setDoc(parentDoc);
-      dispatch(connectSidenote(parentDoc, sidenote, base));
+      dispatch(connectSidenote(parentDoc, sidenote, base, el));
     }
   }, []);
+
+  if (opts.preserveBoundaries && selected) {
+    top += opts.padding;
+  }
+
   return (
     <div
       id={sidenote}

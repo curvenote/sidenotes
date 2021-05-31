@@ -1,6 +1,7 @@
 import { Store } from './store/types';
 export declare type Options = {
     padding?: number;
+    preserveBoundaries?: boolean;
 };
 declare type Ref<T> = {
     store: () => T;

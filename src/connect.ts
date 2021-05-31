@@ -5,6 +5,7 @@ import { State, Store } from './store/types';
 
 export type Options = {
   padding?: number;
+  preserveBoundaries?: boolean;
 };
 
 type Ref<T> = {
@@ -60,4 +61,5 @@ export const store: Pick<Store, 'getState' | 'dispatch' | 'subscribe'> = {
 
 export const opts: Required<Options> = {
   get padding() { return ref.opts().padding ?? 10; },
+  get preserveBoundaries() { return ref.opts().preserveBoundaries ?? false; },
 };

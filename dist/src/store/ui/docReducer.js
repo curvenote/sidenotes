@@ -16,10 +16,10 @@ const docReducer = (state, action) => {
     switch (action.type) {
         case types_1.UI_REPOSITION_SIDENOTES: return state;
         case types_1.UI_CONNECT_SIDENOTE: {
-            const { sidenoteId, baseId } = action.payload;
+            const { sidenoteId, baseId, el } = action.payload;
             const baseIds = baseId ? [baseId] : [];
             const prevSidenote = state.sidenotes[sidenoteId];
-            return Object.assign(Object.assign({}, state), { sidenotes: Object.assign(Object.assign({}, state.sidenotes), { [sidenoteId]: Object.assign(Object.assign({}, prevSidenote), { id: sidenoteId, baseAnchors: [...baseIds, ...((_a = prevSidenote === null || prevSidenote === void 0 ? void 0 : prevSidenote.baseAnchors) !== null && _a !== void 0 ? _a : [])], inlineAnchors: [...((_b = prevSidenote === null || prevSidenote === void 0 ? void 0 : prevSidenote.inlineAnchors) !== null && _b !== void 0 ? _b : [])] }) }) });
+            return Object.assign(Object.assign({}, state), { sidenotes: Object.assign(Object.assign({}, state.sidenotes), { [sidenoteId]: Object.assign(Object.assign({}, prevSidenote), { id: sidenoteId, baseAnchors: [...baseIds, ...((_a = prevSidenote === null || prevSidenote === void 0 ? void 0 : prevSidenote.baseAnchors) !== null && _a !== void 0 ? _a : [])], inlineAnchors: [...((_b = prevSidenote === null || prevSidenote === void 0 ? void 0 : prevSidenote.inlineAnchors) !== null && _b !== void 0 ? _b : [])], element: el }) }) });
         }
         case types_1.UI_DISCONNECT_SIDENOTE: {
             const { sidenoteId } = action.payload;

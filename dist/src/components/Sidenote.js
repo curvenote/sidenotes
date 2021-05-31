@@ -29,12 +29,13 @@ const classnames_1 = __importDefault(require("classnames"));
 const actions_1 = require("../store/ui/actions");
 const selectors_1 = require("../store/ui/selectors");
 const utils_1 = require("./utils");
+const connect_1 = require("../connect");
 exports.Sidenote = (props) => {
     const { base, sidenote, children } = props;
     const dispatch = react_redux_1.useDispatch();
     const [doc, setDoc] = react_1.useState();
     const selected = react_redux_1.useSelector((state) => selectors_1.isSidenoteSelected(state, doc, sidenote));
-    const top = react_redux_1.useSelector((state) => selectors_1.sidenoteTop(state, doc, sidenote));
+    let top = react_redux_1.useSelector((state) => selectors_1.sidenoteTop(state, doc, sidenote));
     const onClick = react_1.useCallback((event) => {
         event.stopPropagation();
         if (selected)
@@ -45,9 +46,12 @@ exports.Sidenote = (props) => {
         const parentDoc = utils_1.getDoc(el);
         if (parentDoc) {
             setDoc(parentDoc);
-            dispatch(actions_1.connectSidenote(parentDoc, sidenote, base));
+            dispatch(actions_1.connectSidenote(parentDoc, sidenote, base, el));
         }
     }, []);
+    if (connect_1.opts.preserveBoundaries && selected) {
+        top += connect_1.opts.padding;
+    }
     return (react_1.default.createElement("div", { id: sidenote, className: classnames_1.default('sidenote', { selected }), onClick: onClick, ref: onRef, style: { top } }, children));
 };
 exports.Sidenote.defaultProps = {

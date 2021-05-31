@@ -44,5 +44,6 @@ exports.store = {
 };
 exports.opts = {
     get padding() { var _a; return (_a = exports.ref.opts().padding) !== null && _a !== void 0 ? _a : 10; },
+    get preserveBoundaries() { var _a; return (_a = exports.ref.opts().preserveBoundaries) !== null && _a !== void 0 ? _a : false; },
 };
 //# sourceMappingURL=connect.js.map

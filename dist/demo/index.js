@@ -21,7 +21,7 @@ const baseAnchor = 'anchor';
 const blue = 'blue';
 const red = 'red';
 const green = 'green';
-const deselect = () => store.dispatch(actions_1.updateSidenote(docId));
+const deselect = () => store.dispatch(actions_1.deselectSidenote(docId));
 react_dom_1.default.render(react_1.default.createElement(react_redux_1.Provider, { store: store },
     react_1.default.createElement(react_1.default.StrictMode, null,
         react_1.default.createElement("article", { id: docId, onClick: deselect },

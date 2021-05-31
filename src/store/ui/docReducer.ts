@@ -24,7 +24,7 @@ const docReducer = (
   switch (action.type) {
     case UI_REPOSITION_SIDENOTES: return state;
     case UI_CONNECT_SIDENOTE: {
-      const { sidenoteId, baseId } = action.payload;
+      const { sidenoteId, baseId, el } = action.payload;
       const baseIds = baseId ? [baseId] : [];
       const prevSidenote = state.sidenotes[sidenoteId];
       return {
@@ -36,6 +36,7 @@ const docReducer = (
             id: sidenoteId,
             baseAnchors: [...baseIds, ...(prevSidenote?.baseAnchors ?? [])],
             inlineAnchors: [...(prevSidenote?.inlineAnchors ?? [])],
+            element: el,
           },
         },
       };
