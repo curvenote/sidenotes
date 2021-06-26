@@ -14,7 +14,7 @@ var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
     __setModuleDefault(result, mod);
     return result;
 };
@@ -29,8 +29,8 @@ const classnames_1 = __importDefault(require("classnames"));
 const actions_1 = require("../store/ui/actions");
 const selectors_1 = require("../store/ui/selectors");
 const utils_1 = require("./utils");
-exports.InlineAnchor = (props) => {
-    const { sidenote, children, className, } = props;
+const InlineAnchor = (props) => {
+    const { sidenote, children, className } = props;
     const dispatch = react_redux_1.useDispatch();
     const [doc, setDoc] = react_1.useState();
     const [ref, setRef] = react_1.useState(null);
@@ -52,9 +52,13 @@ exports.InlineAnchor = (props) => {
             dispatch(actions_1.connectAnchor(parentDoc, sidenote, el));
         }
     }, []);
-    const classes = classnames_1.default('anchor', { selected, [className !== null && className !== void 0 ? className : '']: Boolean(className) });
+    const classes = classnames_1.default('anchor', {
+        selected,
+        [className !== null && className !== void 0 ? className : '']: Boolean(className),
+    });
     return (react_1.default.createElement("span", { className: classes, onClick: onClick, ref: onRef }, children));
 };
+exports.InlineAnchor = InlineAnchor;
 exports.InlineAnchor.defaultProps = {
     className: undefined,
 };

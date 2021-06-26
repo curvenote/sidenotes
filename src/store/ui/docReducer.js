@@ -14,7 +14,8 @@ const docReducer = (state, action) => {
         };
     }
     switch (action.type) {
-        case types_1.UI_REPOSITION_SIDENOTES: return state;
+        case types_1.UI_REPOSITION_SIDENOTES:
+            return state;
         case types_1.UI_CONNECT_SIDENOTE: {
             const { sidenoteId, baseId } = action.payload;
             const baseIds = baseId ? [baseId] : [];

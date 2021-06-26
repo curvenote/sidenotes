@@ -23,7 +23,10 @@ function connectAnchor(docId, sidenoteId, element) {
         dispatch({
             type: types_1.UI_CONNECT_ANCHOR,
             payload: {
-                docId, sidenoteId, anchorId, element,
+                docId,
+                sidenoteId,
+                anchorId,
+                element,
             },
         });
     };
@@ -37,7 +40,9 @@ function connectAnchorBase(docId, anchorId, element) {
         dispatch({
             type: types_1.UI_CONNECT_ANCHOR_BASE,
             payload: {
-                docId, anchorId, element,
+                docId,
+                anchorId,
+                element,
             },
         });
     };

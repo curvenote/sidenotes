@@ -14,7 +14,7 @@ var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
     __setModuleDefault(result, mod);
     return result;
 };
@@ -29,7 +29,7 @@ const classnames_1 = __importDefault(require("classnames"));
 const actions_1 = require("../store/ui/actions");
 const selectors_1 = require("../store/ui/selectors");
 const utils_1 = require("./utils");
-exports.Sidenote = (props) => {
+const Sidenote = (props) => {
     const { base, sidenote, children } = props;
     const dispatch = react_redux_1.useDispatch();
     const [doc, setDoc] = react_1.useState();
@@ -50,6 +50,7 @@ exports.Sidenote = (props) => {
     }, []);
     return (react_1.default.createElement("div", { id: sidenote, className: classnames_1.default('sidenote', { selected }), onClick: onClick, ref: onRef, style: { top } }, children));
 };
+exports.Sidenote = Sidenote;
 exports.Sidenote.defaultProps = {
     base: undefined,
 };

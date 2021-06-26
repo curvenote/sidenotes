@@ -30,7 +30,8 @@ function placeSidenotes(state, actionType) {
     if (actionType === types_1.UI_DESELECT_SIDENOTE)
         return state;
     let findMe;
-    const sorted = Object.entries(state.sidenotes).map(([id, cmt]) => {
+    const sorted = Object.entries(state.sidenotes)
+        .map(([id, cmt]) => {
         var _a, _b, _c;
         const anchor = (_b = state.anchors[(_a = cmt.inlineAnchors) === null || _a === void 0 ? void 0 : _a[0]]) !== null && _b !== void 0 ? _b : state.anchors[(_c = cmt.baseAnchors) === null || _c === void 0 ? void 0 : _c[0]];
         const loc = [id, Object.assign(Object.assign({}, getTopLeft(anchor)), { height: getHeight(id) })];
@@ -38,7 +39,8 @@ function placeSidenotes(state, actionType) {
             findMe = loc;
         }
         return loc;
-    }).sort((a, b) => {
+    })
+        .sort((a, b) => {
         if (a[1].top === b[1].top)
             return a[1].left - b[1].left;
         return a[1].top - b[1].top;
@@ -81,12 +83,11 @@ const uiReducer = (state = exports.initialState, action) => {
         case types_1.UI_CONNECT_ANCHOR_BASE:
         case types_1.UI_DISCONNECT_ANCHOR:
         case types_1.UI_DESELECT_SIDENOTE:
-        case types_1.UI_REPOSITION_SIDENOTES:
-            {
-                const { docId } = action.payload;
-                const nextDoc = placeSidenotes(docReducer_1.default(state.docs[docId], action), action.type);
-                return Object.assign(Object.assign({}, state), { docs: Object.assign(Object.assign({}, state.docs), { [docId]: nextDoc }) });
-            }
+        case types_1.UI_REPOSITION_SIDENOTES: {
+            const { docId } = action.payload;
+            const nextDoc = placeSidenotes(docReducer_1.default(state.docs[docId], action), action.type);
+            return Object.assign(Object.assign({}, state), { docs: Object.assign(Object.assign({}, state.docs), { [docId]: nextDoc }) });
+        }
         case types_1.UI_RESET_ALL_SIDENOTES: {
             return Object.assign(Object.assign({}, state), { docs: {} });
         }

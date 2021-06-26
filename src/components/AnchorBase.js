@@ -14,7 +14,7 @@ var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
     __setModuleDefault(result, mod);
     return result;
 };
@@ -29,8 +29,8 @@ const classnames_1 = __importDefault(require("classnames"));
 const actions_1 = require("../store/ui/actions");
 const selectors_1 = require("../store/ui/selectors");
 const utils_1 = require("./utils");
-exports.AnchorBase = (props) => {
-    const { anchor, children, className, } = props;
+const AnchorBase = (props) => {
+    const { anchor, children, className } = props;
     const dispatch = react_redux_1.useDispatch();
     const [doc, setDoc] = react_1.useState();
     const [ref, setRef] = react_1.useState(null);
@@ -43,9 +43,13 @@ exports.AnchorBase = (props) => {
             dispatch(actions_1.connectAnchorBase(parentDoc, anchor, el));
         }
     }, []);
-    const classes = classnames_1.default({ selected, [className !== null && className !== void 0 ? className : '']: Boolean(className) });
+    const classes = classnames_1.default({
+        selected,
+        [className !== null && className !== void 0 ? className : '']: Boolean(className),
+    });
     return (react_1.default.createElement("div", { className: classes, ref: onRef }, children));
 };
+exports.AnchorBase = AnchorBase;
 exports.AnchorBase.defaultProps = {
     className: undefined,
 };

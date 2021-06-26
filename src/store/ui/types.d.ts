@@ -100,4 +100,4 @@ export interface RepositionSidenotesAction {
         docId: string;
     };
 }
-export declare type UIActionTypes = (ConnectSidenoteAction | DisconnectSidenoteAction | ConnectAnchorAction | ConnectAnchorBaseAction | DisconnectAnchorAction | SelectSidenoteAction | SelectAnchorAction | DeselectSidenoteAction | RepositionSidenotesAction | ResetAllSidenotesAction);
+export declare type UIActionTypes = ConnectSidenoteAction | DisconnectSidenoteAction | ConnectAnchorAction | ConnectAnchorBaseAction | DisconnectAnchorAction | SelectSidenoteAction | SelectAnchorAction | DeselectSidenoteAction | RepositionSidenotesAction | ResetAllSidenotesAction;

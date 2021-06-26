@@ -6,7 +6,7 @@ export interface State {
         ui: UIState;
     };
 }
-export declare type SidenotesUIActions = (UIActionTypes);
+export declare type SidenotesUIActions = UIActionTypes;
 export declare type AppThunk<ReturnType = void> = ThunkAction<ReturnType, State, null, Action<string>>;
 export declare type Dispatch = ThunkDispatch<State, null, Action<string>>;
 export declare type Store = RStore<State, SidenotesUIActions> & {
