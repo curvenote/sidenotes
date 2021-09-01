@@ -82,6 +82,7 @@ const uiReducer = (state = exports.initialState, action) => {
         case types_1.UI_CONNECT_ANCHOR:
         case types_1.UI_CONNECT_ANCHOR_BASE:
         case types_1.UI_DISCONNECT_ANCHOR:
+        case types_1.UI_DISCONNECT_SIDENOTE:
         case types_1.UI_DESELECT_SIDENOTE:
         case types_1.UI_REPOSITION_SIDENOTES: {
             const { docId } = action.payload;
