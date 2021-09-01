@@ -33,7 +33,7 @@ const AnchorBase = (props) => {
     const { anchor, children, className } = props;
     const dispatch = react_redux_1.useDispatch();
     const [doc, setDoc] = react_1.useState();
-    const [ref, setRef] = react_1.useState(null);
+    const [, setRef] = react_1.useState(null);
     const selected = react_redux_1.useSelector((state) => selectors_1.isSidenoteSelected(state, doc, anchor));
     const onRef = react_1.useCallback((el) => {
         setRef(el);
