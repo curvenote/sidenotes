@@ -21,7 +21,9 @@ const baseAnchor = 'anchor';
 const blue = 'blue';
 const red = 'red';
 const green = 'green';
+const someId = 'some_id';
 const deselect = () => store.dispatch(actions_1.deselectSidenote(docId));
+store.dispatch(src_1.actions.connectAnchor(docId, blue, someId));
 react_dom_1.default.render(react_1.default.createElement(react_redux_1.Provider, { store: store },
     react_1.default.createElement(react_1.default.StrictMode, null,
         react_1.default.createElement("article", { id: docId, onClick: deselect },
@@ -43,22 +45,32 @@ react_dom_1.default.render(react_1.default.createElement(react_redux_1.Provider,
                     react_1.default.createElement(src_1.InlineAnchor, { sidenote: red, className: "red" }, "another red sidenote!")),
                 react_1.default.createElement("ul", null,
                     react_1.default.createElement("li", null,
-                        "Must see all the ",
+                        "Must see all the",
+                        ' ',
                         react_1.default.createElement(src_1.InlineAnchor, { sidenote: red, className: "red" }, "sidenotes"),
-                        " at once, so they should be in the margins!"),
+                        ' ',
+                        "at once, so they should be in the margins!"),
                     react_1.default.createElement("li", null, "Must be associated with a block (a small bit of content), that is versioned and must point to content inside of that block.")),
                 react_1.default.createElement("p", null,
-                    "The sidenotes location ",
+                    "The sidenotes location",
+                    ' ',
                     react_1.default.createElement(src_1.InlineAnchor, { sidenote: blue, className: "blue" }, "information"),
-                    " is a stand alone package. For example, the reducer should be based on the ID of the sidenote that can get triggered (or not)."),
+                    ' ',
+                    "is a stand alone package. For example, the reducer should be based on the ID of the sidenote that can get triggered (or not)."),
                 react_1.default.createElement("p", null,
-                    "Has a mini reducer in there to keep internal state There needs to be one for each sidenote list, and one per doc/article. Positions things based on height of each ",
+                    "Has a mini reducer in there to keep internal state There needs to be one for each sidenote list, and one per doc/article. Positions things based on height of each",
+                    ' ',
                     react_1.default.createElement(src_1.InlineAnchor, { sidenote: blue, className: "blue" }, "sidenotes"),
                     ", and a list of ids in the document. These ids are used to look up position and place the position of the sidenotes based on a relative container that is along side the doc. Visible Selected The sidenotes dont have to reposition unless one is selected. Each time do a sweep of the doc and reposition the elements. The animation can be handled by CSS."),
                 react_1.default.createElement("p", null,
                     react_1.default.createElement(src_1.InlineAnchor, { sidenote: red, className: "red" }, "Next sidenote!")),
                 react_1.default.createElement("p", null,
-                    react_1.default.createElement(src_1.InlineAnchor, { sidenote: red, className: "red" }, "sidenotes"))),
+                    react_1.default.createElement(src_1.InlineAnchor, { sidenote: red, className: "red" }, "sidenotes")),
+                react_1.default.createElement("p", null,
+                    react_1.default.createElement("span", { id: someId, onClickCapture: (event) => {
+                            event.stopPropagation();
+                            store.dispatch(src_1.actions.selectAnchor(docId, someId));
+                        }, className: "blue" }, "You can also create usng plain js if you want."))),
             react_1.default.createElement("div", { className: "sidenotes" },
                 react_1.default.createElement(src_1.Sidenote, { sidenote: blue, base: baseAnchor },
                     react_1.default.createElement("div", { style: { width: 280, height: 150, backgroundColor: 'blue' } })),

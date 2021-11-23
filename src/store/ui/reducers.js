@@ -14,9 +14,20 @@ function getHeight(id) {
     var _a, _b;
     return (_b = (_a = document.getElementById(id)) === null || _a === void 0 ? void 0 : _a.offsetHeight) !== null && _b !== void 0 ? _b : 0;
 }
+function getAnchorElement(state, sidenote) {
+    var _a, _b, _c, _d;
+    const allAnchors = [...((_a = sidenote.inlineAnchors) !== null && _a !== void 0 ? _a : []), ...((_b = sidenote.baseAnchors) !== null && _b !== void 0 ? _b : [])];
+    for (let index = 0; index < allAnchors.length; index += 1) {
+        const anchor = state.anchors[allAnchors[index]];
+        const element = (_c = anchor === null || anchor === void 0 ? void 0 : anchor.element) !== null && _c !== void 0 ? _c : document.getElementById((_d = anchor === null || anchor === void 0 ? void 0 : anchor.id) !== null && _d !== void 0 ? _d : '');
+        if (element)
+            return element;
+    }
+    return null;
+}
 function getTopLeft(anchor) {
     var _a;
-    let el = anchor === null || anchor === void 0 ? void 0 : anchor.element;
+    let el = anchor;
     let top = 0;
     let left = 0;
     do {
@@ -31,10 +42,9 @@ function placeSidenotes(state, actionType) {
         return state;
     let findMe;
     const sorted = Object.entries(state.sidenotes)
-        .map(([id, cmt]) => {
-        var _a, _b, _c;
-        const anchor = (_b = state.anchors[(_a = cmt.inlineAnchors) === null || _a === void 0 ? void 0 : _a[0]]) !== null && _b !== void 0 ? _b : state.anchors[(_c = cmt.baseAnchors) === null || _c === void 0 ? void 0 : _c[0]];
-        const loc = [id, Object.assign(Object.assign({}, getTopLeft(anchor)), { height: getHeight(id) })];
+        .map(([id, sidenote]) => {
+        const element = getAnchorElement(state, sidenote);
+        const loc = [id, Object.assign(Object.assign({}, getTopLeft(element)), { height: getHeight(id) })];
         if (id === state.selectedSidenote) {
             findMe = loc;
         }

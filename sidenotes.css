@@ -18,14 +18,14 @@ article .sidenotes .sidenote.selected {
   opacity: 1;
   z-index: 1;
 }
-article .anchor {
-  background-color: var(--sidenoteAnchorColor, #f8e4b1);
-}
 article .anchor:hover {
   background-color: var(--sidenoteAnchorColorHover, #f7cf69b6);
 }
 article .anchor.selected {
   background-color: var(--sidenoteAnchorColorSelected, #f5c955);
+}
+article .anchor {
+  background-color: var(--sidenoteAnchorColor, #f8e4b1);
 }
 
 /*# sourceMappingURL=sidenotes.css.map */
