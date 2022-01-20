@@ -8,9 +8,12 @@ export function selectedSidenote(state: State, docId?: string | null) {
 export function isSidenoteSelected(
   state: State,
   docId?: string | null,
-  sidenoteId?: string | null,
+  sidenoteId?: string | Array<string> | null,
 ) {
   if (docId == null || sidenoteId == null) return false;
+  if (Array.isArray(sidenoteId)) {
+    return sidenoteId.indexOf(state.sidenotes.ui.docs[docId]?.selectedSidenote || '') >= 0;
+  }
   return state.sidenotes.ui.docs[docId]?.selectedSidenote === sidenoteId;
 }
 

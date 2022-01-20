@@ -1,13 +1,13 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames';
-import { connectAnchor, disconnectAnchor, selectAnchor } from '../store/ui/actions';
+import { connectAnchor, disconnectAnchor, selectSidenote } from '../store/ui/actions';
 import { isSidenoteSelected } from '../store/ui/selectors';
 import { Dispatch, State } from '../store';
 import { getDoc } from './utils';
 
 type Props = {
-  sidenote: string;
+  sidenote: string | Array<string>;
   className?: string;
   children: React.ReactNode;
 };
@@ -27,9 +27,9 @@ export const InlineAnchor = (props: Props) => {
   const onClick = useCallback(
     (event: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
       event.stopPropagation();
-      dispatch(selectAnchor(doc, ref));
+      dispatch(selectSidenote(doc, sidenote));
     },
-    [doc, ref],
+    [doc, sidenote],
   );
   const onRef = useCallback((el: HTMLSpanElement) => {
     setRef(el);

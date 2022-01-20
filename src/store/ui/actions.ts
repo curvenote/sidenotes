@@ -16,11 +16,20 @@ import { selectedSidenote } from './selectors';
 
 export function connectSidenote(
   docId?: string,
-  sidenoteId?: string,
+  sidenoteId?: string | Array<string>,
   baseId?: string,
 ): AppThunk<void> {
   return (dispatch) => {
-    if (docId == null || sidenoteId == null) return;
+    if (docId == null || sidenoteId == null || sidenoteId?.length === 0) return;
+    if (Array.isArray(sidenoteId)) {
+      sidenoteId.forEach((id) => {
+        dispatch({
+          type: UI_CONNECT_SIDENOTE,
+          payload: { docId, sidenoteId: id, baseId },
+        } as SidenotesUIActions);
+      });
+      return;
+    }
     dispatch({
       type: UI_CONNECT_SIDENOTE,
       payload: { docId, sidenoteId, baseId },
@@ -30,7 +39,7 @@ export function connectSidenote(
 
 export function connectAnchor(
   docId?: string,
-  sidenoteId?: string,
+  sidenoteId?: string | Array<string>,
   element?: string | HTMLElement,
 ): AppThunk<void> {
   return (dispatch) => {
@@ -72,19 +81,42 @@ export function connectAnchorBase(
   };
 }
 
+export function repositionSidenotes(docId: string): SidenotesUIActions {
+  return { type: UI_REPOSITION_SIDENOTES, payload: { docId } };
+}
+
 export function updateSidenote(docId: string, sidenoteId: string): SidenotesUIActions {
   return {
     type: UI_SELECT_SIDENOTE,
     payload: { docId, sidenoteId },
   };
 }
-
-export function selectSidenote(docId?: string, sidenoteId?: string): AppThunk<void> {
-  return (dispatch) => {
-    dispatch({
-      type: UI_SELECT_SIDENOTE,
-      payload: { docId, sidenoteId },
-    } as SidenotesUIActions);
+export function selectSidenote(
+  docId?: string,
+  sidenoteId?: string | Array<string>,
+): AppThunk<void> {
+  return (dispatch, getState) => {
+    if (Array.isArray(sidenoteId)) {
+      // Click repeatedly and activate the corresponding notes in turn
+      let index = sidenoteId.indexOf(selectedSidenote(getState(), docId) || '');
+      // eslint-disable-next-line no-nested-ternary
+      index = index < 0 ? 0 : index >= sidenoteId.length - 1 ? 0 : index + 1;
+      dispatch({
+        type: UI_SELECT_SIDENOTE,
+        payload: { docId, sidenoteId: index >= 0 ? sidenoteId[index] : sidenoteId[0] },
+      } as SidenotesUIActions);
+    } else {
+      dispatch({
+        type: UI_SELECT_SIDENOTE,
+        payload: { docId, sidenoteId },
+      } as SidenotesUIActions);
+    }
+    if (docId) {
+      // Active side notes may change in size
+      setTimeout(() => {
+        dispatch(repositionSidenotes(docId));
+      }, 32);
+    }
   };
 }
 
@@ -97,6 +129,11 @@ export function selectAnchor(docId?: string, anchor?: string | HTMLElement | nul
       type: UI_SELECT_ANCHOR,
       payload: { docId, anchorId },
     } as SidenotesUIActions);
+    if (docId) {
+      setTimeout(() => {
+        dispatch(repositionSidenotes(docId));
+      }, 32);
+    }
   };
 }
 
@@ -147,8 +184,4 @@ export function deselectSidenote(docId: string): AppThunk {
       dispatch({ type: UI_DESELECT_SIDENOTE, payload: { docId } });
     }
   };
-}
-
-export function repositionSidenotes(docId: string): SidenotesUIActions {
-  return { type: UI_REPOSITION_SIDENOTES, payload: { docId } };
 }
