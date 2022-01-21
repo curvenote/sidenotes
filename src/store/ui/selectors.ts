@@ -4,7 +4,10 @@ export function selectedSidenote(state: State, docId?: string | null) {
   if (docId == null) return null;
   return state.sidenotes.ui.docs[docId]?.selectedSidenote;
 }
-
+export function selectedAnchor(state: State, docId?: string | null) {
+  if (docId == null) return null;
+  return state.sidenotes.ui.docs[docId]?.selectedAnchor;
+}
 export function isSidenoteSelected(
   state: State,
   docId?: string | null,
@@ -18,8 +21,8 @@ export function isSidenoteSelected(
 }
 
 export function sidenoteTop(state: State, docId?: string | null, sidenoteId?: string | null) {
-  if (docId == null || sidenoteId == null) return 0;
-  return state.sidenotes.ui.docs[docId]?.sidenotes[sidenoteId]?.top ?? 0;
+  if (docId == null || sidenoteId == null) return null; // null means hide
+  return state.sidenotes.ui.docs[docId]?.sidenotes[sidenoteId]?.top ?? null;
 }
 
 export function isAnchorSelected(state: State, docId: string | null, anchorId: string | null) {

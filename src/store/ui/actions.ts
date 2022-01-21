@@ -3,6 +3,7 @@ import {
   UI_CONNECT_ANCHOR,
   UI_DESELECT_SIDENOTE,
   UI_DISCONNECT_ANCHOR,
+  UI_DISCONNECT_ANCHOR_BASE,
   UI_CONNECT_SIDENOTE,
   UI_SELECT_ANCHOR,
   UI_SELECT_SIDENOTE,
@@ -10,9 +11,10 @@ import {
   UI_CONNECT_ANCHOR_BASE,
   UI_REPOSITION_SIDENOTES,
   UI_RESET_ALL_SIDENOTES,
+  DisconnectAnchorBase,
 } from './types';
 import { AppThunk, SidenotesUIActions } from '../types';
-import { selectedSidenote } from './selectors';
+import { selectedSidenote, selectedAnchor } from './selectors';
 
 export function connectSidenote(
   docId?: string,
@@ -44,7 +46,31 @@ export function connectAnchor(
 ): AppThunk<void> {
   return (dispatch) => {
     if (docId == null || sidenoteId == null || element == null) return;
-    const anchorId = typeof element === 'string' ? element : uuid();
+    if (Array.isArray(sidenoteId)) {
+      const anchorIds =
+        typeof element === 'string'
+          ? element
+          : (element as any)?.anchorId || sidenoteId.map(() => uuid()); // array
+      if ((element as any)?.anchorId === anchorIds) return;
+      if (typeof element !== 'string') {
+        // eslint-disable-next-line no-param-reassign
+        (element as any).anchorId = anchorIds;
+      }
+      sidenoteId.forEach((id, index) => {
+        dispatch({
+          type: UI_CONNECT_ANCHOR,
+          payload: {
+            docId,
+            sidenoteId: id,
+            anchorId: Array.isArray(anchorIds) ? anchorIds[index] : anchorIds,
+            element: typeof element === 'string' ? undefined : element,
+          },
+        } as SidenotesUIActions);
+      });
+      return;
+    }
+    const anchorId = typeof element === 'string' ? element : (element as any)?.anchorId || uuid();
+    if ((element as any)?.anchorId === anchorId) return;
     if (typeof element !== 'string') {
       // eslint-disable-next-line no-param-reassign
       (element as any).anchorId = anchorId;
@@ -80,7 +106,18 @@ export function connectAnchorBase(
     } as SidenotesUIActions);
   };
 }
-
+export function disconnectAnchorBase(docId?: string, anchorId?: string): AppThunk<void> {
+  return (dispatch) => {
+    if (docId == null || anchorId == null) return;
+    dispatch({
+      type: UI_DISCONNECT_ANCHOR_BASE,
+      payload: {
+        docId,
+        anchorId,
+      },
+    } as DisconnectAnchorBase);
+  };
+}
 export function repositionSidenotes(docId: string): SidenotesUIActions {
   return { type: UI_REPOSITION_SIDENOTES, payload: { docId } };
 }
@@ -91,49 +128,35 @@ export function updateSidenote(docId: string, sidenoteId: string): SidenotesUIAc
     payload: { docId, sidenoteId },
   };
 }
-export function selectSidenote(
-  docId?: string,
-  sidenoteId?: string | Array<string>,
-): AppThunk<void> {
-  return (dispatch, getState) => {
-    if (Array.isArray(sidenoteId)) {
-      // Click repeatedly and activate the corresponding notes in turn
-      let index = sidenoteId.indexOf(selectedSidenote(getState(), docId) || '');
-      // eslint-disable-next-line no-nested-ternary
-      index = index < 0 ? 0 : index >= sidenoteId.length - 1 ? 0 : index + 1;
-      dispatch({
-        type: UI_SELECT_SIDENOTE,
-        payload: { docId, sidenoteId: index >= 0 ? sidenoteId[index] : sidenoteId[0] },
-      } as SidenotesUIActions);
-    } else {
-      dispatch({
-        type: UI_SELECT_SIDENOTE,
-        payload: { docId, sidenoteId },
-      } as SidenotesUIActions);
-    }
-    if (docId) {
-      // Active side notes may change in size
-      setTimeout(() => {
-        dispatch(repositionSidenotes(docId));
-      }, 32);
-    }
+export function selectSidenote(docId?: string, sidenoteId?: string): AppThunk<void> {
+  return (dispatch) => {
+    dispatch({
+      type: UI_SELECT_SIDENOTE,
+      payload: { docId, sidenoteId },
+    } as SidenotesUIActions);
   };
 }
 
 export function selectAnchor(docId?: string, anchor?: string | HTMLElement | null): AppThunk<void> {
-  return (dispatch) => {
+  return (dispatch, getState) => {
     if (docId == null || anchor == null) return;
     const anchorId = typeof anchor === 'string' ? anchor : (anchor as any).anchorId;
     if (!anchorId) return;
+    if (Array.isArray(anchorId)) {
+      // Click repeatedly and activate the corresponding notes in turn
+      let index = anchorId.indexOf(selectedAnchor(getState(), docId) || '');
+      // eslint-disable-next-line no-nested-ternary
+      index = index < 0 ? 0 : index >= anchorId.length - 1 ? 0 : index + 1;
+      dispatch({
+        type: UI_SELECT_ANCHOR,
+        payload: { docId, anchorId: anchorId[index] },
+      } as SidenotesUIActions);
+      return;
+    }
     dispatch({
       type: UI_SELECT_ANCHOR,
       payload: { docId, anchorId },
     } as SidenotesUIActions);
-    if (docId) {
-      setTimeout(() => {
-        dispatch(repositionSidenotes(docId));
-      }, 32);
-    }
   };
 }
 
@@ -155,6 +178,15 @@ export function disconnectAnchor(
     if (docId == null || anchor == null) return;
     const anchorId = typeof anchor === 'string' ? anchor : (anchor as any).anchorId;
     if (!anchorId) return;
+    if (Array.isArray(anchorId)) {
+      anchorId.forEach((id) => {
+        dispatch({
+          type: UI_DISCONNECT_ANCHOR,
+          payload: { docId, anchorId: id },
+        } as SidenotesUIActions);
+      });
+      return;
+    }
     dispatch({
       type: UI_DISCONNECT_ANCHOR,
       payload: { docId, anchorId },

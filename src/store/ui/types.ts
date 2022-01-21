@@ -6,6 +6,7 @@ export const UI_DISCONNECT_SIDENOTE = 'UI_DISCONNECT_SIDENOTE';
 export const UI_CONNECT_ANCHOR = 'UI_CONNECT_ANCHOR';
 export const UI_CONNECT_ANCHOR_BASE = 'UI_CONNECT_ANCHOR_BASE';
 export const UI_DISCONNECT_ANCHOR = 'UI_DISCONNECT_ANCHOR';
+export const UI_DISCONNECT_ANCHOR_BASE = 'UI_DISCONNECT_ANCHOR_BASE';
 export const UI_SELECT_SIDENOTE = 'UI_SELECT_SIDENOTE';
 export const UI_DESELECT_SIDENOTE = 'UI_DESELECT_SIDENOTE';
 export const UI_SELECT_ANCHOR = 'UI_SELECT_ANCHOR';
@@ -50,6 +51,13 @@ export interface ConnectSidenoteAction {
 
 export interface DisconnectAnchorAction {
   type: typeof UI_DISCONNECT_ANCHOR;
+  payload: {
+    docId: string;
+    anchorId: string;
+  };
+}
+export interface DisconnectAnchorBase {
+  type: typeof UI_DISCONNECT_ANCHOR_BASE;
   payload: {
     docId: string;
     anchorId: string;
@@ -124,4 +132,5 @@ export type UIActionTypes =
   | SelectAnchorAction
   | DeselectSidenoteAction
   | RepositionSidenotesAction
+  | DisconnectAnchorBase
   | ResetAllSidenotesAction;

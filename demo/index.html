@@ -4,18 +4,27 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>sidenotes</title>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-4P4Z3X7QKB"></script>
-    <script>
+    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-4P4Z3X7QKB"></script> -->
+    <!-- <script>
       window.dataLayer = window.dataLayer || [];
       function gtag() { dataLayer.push(arguments); }
       gtag('js', new Date());
       gtag('config', 'G-4P4Z3X7QKB');
-    </script>
+    </script> -->
+    <style>
+      #container{
+        height: 100vh;
+        overflow-y: auto;
+      }
+    </style>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
-    <article className="content centered">
-      <div id="root"></div>
-    </article>
+    <div id='container'>
+      
+      <article className="content centered">
+        <div id="root"></div>
+      </article>
+    </div>
   </body>
 </html>

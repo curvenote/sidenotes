@@ -2,6 +2,7 @@
 import { Unsubscribe } from 'redux';
 import { v4 as uuid } from 'uuid';
 import { State, Store } from './store/types';
+import { setupObserver } from './resizeObserver';
 
 export type Options = {
   padding?: number;
@@ -48,6 +49,7 @@ export function setup(store: Store, opts: Options) {
   ref._store = store;
   ref._opts = opts;
   store.subscribe(() => notify(store));
+  setupObserver(store);
 }
 
 export const store: Pick<Store, 'getState' | 'dispatch' | 'subscribe'> = {

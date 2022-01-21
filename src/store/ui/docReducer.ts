@@ -12,6 +12,7 @@ import {
   ANCHOR_BASE,
   UI_REPOSITION_SIDENOTES,
   UI_RESET_ALL_SIDENOTES,
+  UI_DISCONNECT_ANCHOR_BASE,
 } from './types';
 
 const docReducer = (state: DocState, action: UIActionTypes): DocState => {
@@ -70,7 +71,7 @@ const docReducer = (state: DocState, action: UIActionTypes): DocState => {
           ...state.sidenotes,
           [sidenoteId]: {
             ...prevSidenote,
-            inlineAnchors: [anchorId, ...(prevSidenote?.inlineAnchors ?? [])],
+            inlineAnchors: [...(prevSidenote?.inlineAnchors ?? []), anchorId],
           },
         },
         anchors: {
@@ -97,6 +98,16 @@ const docReducer = (state: DocState, action: UIActionTypes): DocState => {
         },
       };
     }
+    case UI_DISCONNECT_ANCHOR_BASE: {
+      const { anchorId } = action.payload;
+
+      const anchors = { ...state.anchors };
+      delete anchors[anchorId];
+      return {
+        ...state,
+        anchors,
+      };
+    }
     case UI_DISCONNECT_ANCHOR: {
       const { anchorId } = action.payload;
       const anchor = state.anchors[anchorId];
@@ -106,14 +117,24 @@ const docReducer = (state: DocState, action: UIActionTypes): DocState => {
       delete anchors[anchor.id];
 
       const sidenote = state.sidenotes[anchor.sidenote];
-
+      const inlineAnchors = [...(sidenote?.inlineAnchors ?? [])].filter((a) => a !== anchorId);
+      // all anchor has been removed
+      if (inlineAnchors.length === 0) {
+        const sn = { ...state.sidenotes };
+        delete sn[anchor.sidenote];
+        return {
+          ...state,
+          sidenotes: sn,
+          anchors,
+        };
+      }
       return {
         ...state,
         sidenotes: {
           ...state.sidenotes,
           [anchor.sidenote]: {
             ...sidenote,
-            inlineAnchors: [...(sidenote?.inlineAnchors ?? [])].filter((a) => a !== anchorId),
+            inlineAnchors,
           },
         },
         anchors,

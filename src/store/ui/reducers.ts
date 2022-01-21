@@ -51,20 +51,21 @@ function getTopLeft(anchor: HTMLElement | null) {
   return { top, left };
 }
 
+type Loc = [string, { top: number; left: number; height: number; isRemoved?: boolean }];
 function placeSidenotes(state: DocState, actionType: string): DocState {
   // Do not place comments if it is a deselect call
   if (actionType === UI_DESELECT_SIDENOTE) return state;
-  type Loc = [string, { top: number; left: number; height: number }];
   let findMe: Loc | undefined;
   const sorted = Object.entries(state.sidenotes)
     .map(([id, sidenote]) => {
       const element = getAnchorElement(state, sidenote);
-      const loc: Loc = [id, { ...getTopLeft(element), height: getHeight(id) }];
+      const loc: Loc = [id, { ...getTopLeft(element), height: getHeight(id), isRemoved: !element }];
       if (id === state.selectedSidenote) {
         findMe = loc;
       }
       return loc;
     })
+    .filter((loc) => !loc[1].isRemoved)
     .sort((a, b) => {
       if (a[1].top === b[1].top) return a[1].left - b[1].left;
       return a[1].top - b[1].top;
@@ -92,7 +93,7 @@ function placeSidenotes(state: DocState, actionType: string): DocState {
   let hasChanges = false;
   const sidenotes = Object.fromEntries(
     Object.entries(state.sidenotes).map(([id, comment]) => {
-      const { top } = idealPlacement[id];
+      const { top } = idealPlacement[id] || {};
       if (comment.top !== top) {
         hasChanges = true;
         return [id, { ...comment, top }];
@@ -109,11 +110,11 @@ function placeSidenotes(state: DocState, actionType: string): DocState {
 
 const uiReducer = (state = initialState, action: UIActionTypes): UIState => {
   switch (action.type) {
-    case UI_SELECT_SIDENOTE:
-    case UI_SELECT_ANCHOR:
-    case UI_CONNECT_SIDENOTE:
     case UI_CONNECT_ANCHOR:
     case UI_CONNECT_ANCHOR_BASE:
+    case UI_CONNECT_SIDENOTE:
+    case UI_SELECT_SIDENOTE:
+    case UI_SELECT_ANCHOR:
     case UI_DISCONNECT_ANCHOR:
     case UI_DISCONNECT_SIDENOTE:
     case UI_DESELECT_SIDENOTE:

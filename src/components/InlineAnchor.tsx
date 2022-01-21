@@ -1,7 +1,7 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames';
-import { connectAnchor, disconnectAnchor, selectSidenote } from '../store/ui/actions';
+import { connectAnchor, disconnectAnchor, selectAnchor } from '../store/ui/actions';
 import { isSidenoteSelected } from '../store/ui/selectors';
 import { Dispatch, State } from '../store';
 import { getDoc } from './utils';
@@ -16,29 +16,28 @@ export const InlineAnchor = (props: Props) => {
   const { sidenote, children, className } = props;
   const dispatch = useDispatch<Dispatch>();
   const [doc, setDoc] = useState<string>();
-  const [ref, setRef] = useState<HTMLSpanElement | null>(null);
-
-  useEffect(() => {
-    if (ref == null || doc == null) return () => {};
-    return () => dispatch(disconnectAnchor(doc, ref));
-  }, [doc, ref]);
+  const onRef = useRef(null);
 
   const selected = useSelector((state: State) => isSidenoteSelected(state, doc, sidenote));
   const onClick = useCallback(
     (event: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
       event.stopPropagation();
-      dispatch(selectSidenote(doc, sidenote));
+      if (onRef.current) {
+        dispatch(selectAnchor(doc, onRef.current));
+      }
     },
-    [doc, sidenote],
+    [doc, onRef],
   );
-  const onRef = useCallback((el: HTMLSpanElement) => {
-    setRef(el);
+  useEffect(() => {
+    const el = onRef.current;
     const parentDoc = getDoc(el);
-    if (parentDoc) {
+    if (parentDoc && el) {
       setDoc(parentDoc);
       dispatch(connectAnchor(parentDoc, sidenote, el));
     }
-  }, []);
+    return () => dispatch(disconnectAnchor(doc, el));
+  }, [doc]);
+
   const classes = classNames('anchor', {
     selected,
     [className ?? '']: Boolean(className),
