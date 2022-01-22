@@ -35,8 +35,8 @@ export const InlineAnchor = (props: Props) => {
       setDoc(parentDoc);
       dispatch(connectAnchor(parentDoc, sidenote, el));
     }
-    return () => dispatch(disconnectAnchor(doc, el));
-  }, [doc]);
+    return () => dispatch(disconnectAnchor(parentDoc, el));
+  }, [sidenote]);
 
   const classes = classNames('anchor', {
     selected,

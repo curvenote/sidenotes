@@ -179,6 +179,8 @@ export function disconnectAnchor(
     const anchorId = typeof anchor === 'string' ? anchor : (anchor as any).anchorId;
     if (!anchorId) return;
     if (Array.isArray(anchorId)) {
+      // eslint-disable-next-line no-param-reassign
+      (anchor as any).anchorId = undefined;
       anchorId.forEach((id) => {
         dispatch({
           type: UI_DISCONNECT_ANCHOR,
@@ -186,6 +188,10 @@ export function disconnectAnchor(
         } as SidenotesUIActions);
       });
       return;
+    }
+    if (anchor && typeof anchor !== 'string') {
+      // eslint-disable-next-line no-param-reassign
+      (anchor as any).anchorId = undefined;
     }
     dispatch({
       type: UI_DISCONNECT_ANCHOR,

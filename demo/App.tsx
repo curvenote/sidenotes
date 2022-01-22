@@ -66,7 +66,7 @@ export function App(props: any) {
             <InlineAnchor sidenote={red} className="red">
               mini{' '}
             </InlineAnchor>
-            <InlineAnchor sidenote={[blue, red]} className="custom">
+            <InlineAnchor sidenote={[blue, showRed ? red : ''].filter(Boolean)} className={showRed ? 'custom' : 'blue'}>
               reducer
             </InlineAnchor>
             <InlineAnchor sidenote={blue} className="blue">
