@@ -50,19 +50,17 @@ export const Sidenote = (props: Props) => {
     };
   }, [dom, doc]);
 
-  return (
-    ((top !== null && top !== undefined) || isInit) && (
-      <div
-        id={sidenote}
-        className={classNames('sidenote', { selected })}
-        onClick={onClick}
-        ref={onRef}
-        style={{ top: top ?? 0 }}
-      >
-        {children}
-      </div>
-    )
-  );
+  return (top !== null && top !== undefined) || isInit ? (
+    <div
+      id={sidenote}
+      className={classNames('sidenote', { selected })}
+      onClick={onClick}
+      ref={onRef}
+      style={{ top: top ?? 0 }}
+    >
+      {children}
+    </div>
+  ) : null;
 };
 
 Sidenote.defaultProps = {

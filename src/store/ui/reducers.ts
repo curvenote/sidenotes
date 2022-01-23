@@ -43,11 +43,12 @@ function getTopLeft(anchor: HTMLElement | null) {
   let el: HTMLElement | null = anchor;
   let top = 0;
   let left = 0;
-  do {
+  const article = anchor?.closest('article') || document.body;
+  while (article.contains(el)) {
     top += el?.offsetTop || 0;
     left += el?.offsetLeft || 0;
     el = (el?.offsetParent ?? null) as HTMLElement | null;
-  } while (el && el.tagName !== 'ARTICLE');
+  }
   return { top, left };
 }
 

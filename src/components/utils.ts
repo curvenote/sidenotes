@@ -1,5 +1,9 @@
+const articleMap = new WeakMap();
 export const getDoc = (el: HTMLElement | null) => {
-  const doc = el?.closest('article')?.id;
+  const doc = el ? articleMap.get(el) || el.closest('article')?.id : null;
+  if (el && doc) {
+    articleMap.set(el, doc);
+  }
   // eslint-disable-next-line no-console
   if (el && !doc) console.warn('Parent doc for comment not found.');
   return doc || 'global';
