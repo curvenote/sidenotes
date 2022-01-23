@@ -14,7 +14,7 @@ function getHandleResize(docId: string) {
     //   if (!dispatch) return;
     //   dispatch(repositionSidenotes(docId));
     // }, 32);
-  }, 200);
+  }, 100);
 }
 
 export function observer(el: HTMLElement | null, docId: string | undefined) {

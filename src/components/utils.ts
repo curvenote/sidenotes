@@ -18,6 +18,7 @@ export const getDoc = (el: HTMLElement | null) => {
 // eslint-disable-next-line @typescript-eslint/ban-types
 export function throttle(this: any, func: Function, delay: number) {
   let prev = Date.now();
+  let timter: number | null = null;
   // eslint-disable-next-line @typescript-eslint/no-this-alias
   const context = this;
   return function throttleFn(...args: any[]) {
@@ -25,6 +26,12 @@ export function throttle(this: any, func: Function, delay: number) {
     if (now - prev >= delay) {
       func.apply(context, args);
       prev = Date.now();
+      return;
     }
+    if (timter) clearTimeout(timter);
+    timter = +setTimeout(() => {
+      timter = null;
+      func.apply(context, args);
+    }, delay);
   };
 }
