@@ -26,16 +26,16 @@ export const AnchorBase = (props: Props) => {
   useEffect(() => {
     const el = onRef.current;
     const parentDoc = getDoc(el);
-    observer(el, doc);
+    observer(el, parentDoc);
     if (parentDoc && el) {
       setDoc(parentDoc);
       dispatch(connectAnchorBase(parentDoc, anchor, el));
     }
     return () => {
-      unObserver(el, doc);
-      dispatch(disconnectAnchorBase(doc, anchor));
+      unObserver(el, parentDoc);
+      dispatch(disconnectAnchorBase(parentDoc, anchor));
     };
-  }, [doc]);
+  }, []);
   const classes = classNames({
     selected,
     [className ?? '']: Boolean(className),

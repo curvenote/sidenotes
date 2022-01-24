@@ -14,6 +14,7 @@ import {
   UI_REPOSITION_SIDENOTES,
   UI_RESET_ALL_SIDENOTES,
   UI_DISCONNECT_SIDENOTE,
+  UI_DISCONNECT_ANCHOR_BASE,
   Sidenote,
 } from './types';
 
@@ -117,6 +118,7 @@ const uiReducer = (state = initialState, action: UIActionTypes): UIState => {
     case UI_SELECT_SIDENOTE:
     case UI_SELECT_ANCHOR:
     case UI_DISCONNECT_ANCHOR:
+    case UI_DISCONNECT_ANCHOR_BASE:
     case UI_DISCONNECT_SIDENOTE:
     case UI_DESELECT_SIDENOTE:
     case UI_REPOSITION_SIDENOTES: {
@@ -130,6 +132,7 @@ const uiReducer = (state = initialState, action: UIActionTypes): UIState => {
         },
       };
     }
+
     case UI_RESET_ALL_SIDENOTES: {
       return {
         ...state,
