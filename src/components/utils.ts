@@ -35,3 +35,16 @@ export function throttle(this: any, func: Function, delay: number) {
     }, delay);
   };
 }
+// scrollIntoView
+export function scrollElementInview(ele: Element | undefined) {
+  if (!ele) return;
+  // eslint-disable-next-line
+  // @ts-ignore
+  if (typeof ele.scrollIntoViewIfNeeded === 'function') {
+    // eslint-disable-next-line
+    // @ts-ignore
+    ele.scrollIntoViewIfNeeded(true);
+  } else {
+    ele.scrollIntoView({ behavior: 'auto', block: 'center' });
+  }
+}

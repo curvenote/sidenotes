@@ -1,3 +1,4 @@
+import { scrollElementInview } from '../../components/utils';
 import {
   UIActionTypes,
   UI_SELECT_SIDENOTE,
@@ -144,10 +145,13 @@ const docReducer = (state: DocState, action: UIActionTypes): DocState => {
       const { sidenoteId } = action.payload;
 
       const prevSidenote = state.sidenotes[sidenoteId];
+      const selectedAnchor =
+        prevSidenote?.inlineAnchors?.[0] ?? prevSidenote?.baseAnchors?.[0] ?? null;
+      scrollElementInview(state.anchors[selectedAnchor]?.element); // scroll into view
       return {
         ...state,
         selectedSidenote: sidenoteId,
-        selectedAnchor: prevSidenote?.inlineAnchors?.[0] ?? prevSidenote?.baseAnchors?.[0] ?? null,
+        selectedAnchor,
         sidenotes: {
           ...state.sidenotes,
           [sidenoteId]: {
