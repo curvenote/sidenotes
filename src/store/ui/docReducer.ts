@@ -35,6 +35,14 @@ const docReducer = (state: DocState, action: UIActionTypes): DocState => {
       const { sidenoteId, baseId } = action.payload;
       const baseIds = baseId ? [baseId] : [];
       const prevSidenote = state.sidenotes[sidenoteId];
+      let inlineAnchors;
+      if (prevSidenote?.inlineAnchors && prevSidenote?.inlineAnchors.length > 0) {
+        inlineAnchors = prevSidenote?.inlineAnchors;
+      } else {
+        inlineAnchors = Object.values(state.anchors || {})
+          .filter((anchor) => anchor.sidenote === sidenoteId)
+          .map((anchor) => anchor.id);
+      }
       return {
         ...state,
         sidenotes: {
@@ -43,7 +51,7 @@ const docReducer = (state: DocState, action: UIActionTypes): DocState => {
             ...prevSidenote,
             id: sidenoteId,
             baseAnchors: [...baseIds, ...(prevSidenote?.baseAnchors ?? [])],
-            inlineAnchors: [...(prevSidenote?.inlineAnchors ?? [])],
+            inlineAnchors,
           },
         },
       };
