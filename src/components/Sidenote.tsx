@@ -1,7 +1,7 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames';
-import { connectSidenote, selectSidenote } from '../store/ui/actions';
+import { connectSidenote, disconnectSidenote, selectSidenote } from '../store/ui/actions';
 import { sidenoteTop, isSidenoteSelected } from '../store/ui/selectors';
 import { Dispatch, State } from '../store';
 import { observer, unObserver } from '../resizeObserver';
@@ -18,7 +18,7 @@ export const Sidenote = (props: Props) => {
   const dispatch = useDispatch<Dispatch>();
   const [isInit, setInit] = useState(true);
   const [doc, setDoc] = useState<string>();
-  const [dom, setDom] = useState<HTMLDivElement | null>(null);
+  const onRef = useRef(null);
 
   const selected = useSelector((state: State) => isSidenoteSelected(state, doc, sidenote));
   const top = useSelector((state: State) => sidenoteTop(state, doc, sidenote));
@@ -31,24 +31,24 @@ export const Sidenote = (props: Props) => {
     [doc, selected],
   );
 
-  const onRef = useCallback((el: HTMLDivElement) => {
+  useEffect(() => {
+    const el = onRef.current;
+    setInit(false);
+    observer(el, doc);
+    return () => {
+      unObserver(el, doc);
+    };
+  }, [doc]);
+
+  useEffect(() => {
+    const el = onRef.current;
     const parentDoc = getDoc(el);
-    setDom(el);
     if (parentDoc && el) {
       setDoc(parentDoc);
       dispatch(connectSidenote(parentDoc, sidenote, base));
-      observer(el, parentDoc);
     }
-    setInit(false);
-  }, []);
-
-  useEffect(() => {
-    return () => {
-      if (dom) {
-        unObserver(dom, doc);
-      }
-    };
-  }, [dom, doc]);
+    return () => dispatch(disconnectSidenote(parentDoc, sidenote));
+  }, [sidenote]);
 
   return (top !== null && top !== undefined) || isInit ? (
     <div
