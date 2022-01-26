@@ -62,7 +62,9 @@ const docReducer = (state: DocState, action: UIActionTypes): DocState => {
       if (!sidenote) return state;
 
       const sidenotes = { ...state.sidenotes };
-      delete sidenotes[sidenote.id];
+      if (Object.values(state.anchors).every((anchor) => anchor.sidenote !== sidenoteId)) {
+        delete sidenotes[sidenoteId];
+      }
 
       return {
         ...state,
