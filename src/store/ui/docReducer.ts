@@ -11,7 +11,6 @@ import {
   UI_DISCONNECT_SIDENOTE,
   UI_CONNECT_ANCHOR_BASE,
   ANCHOR_BASE,
-  UI_REPOSITION_SIDENOTES,
   UI_RESET_ALL_SIDENOTES,
   UI_DISCONNECT_ANCHOR_BASE,
 } from './types';
@@ -29,8 +28,6 @@ const docReducer = (state: DocState, action: UIActionTypes): DocState => {
     };
   }
   switch (action.type) {
-    case UI_REPOSITION_SIDENOTES:
-      return state;
     case UI_CONNECT_SIDENOTE: {
       const { sidenoteId, baseId } = action.payload;
       const baseIds = baseId ? [baseId] : [];

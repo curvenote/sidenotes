@@ -46,6 +46,7 @@ export interface ConnectSidenoteAction {
     docId: string;
     sidenoteId: string;
     baseId?: string;
+    height: number;
   };
 }
 

@@ -1,7 +1,12 @@
 import React, { useCallback, useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames';
-import { connectSidenote, disconnectSidenote, selectSidenote } from '../store/ui/actions';
+import {
+  connectSidenote,
+  disconnectSidenote,
+  selectSidenote,
+  updateSidenotesOffsetHeight,
+} from '../store/ui/actions';
 import { sidenoteTop, isSidenoteSelected } from '../store/ui/selectors';
 import { Dispatch, State } from '../store';
 import { observer, unObserver } from '../resizeObserver';
@@ -32,22 +37,25 @@ export const Sidenote = (props: Props) => {
   );
 
   useEffect(() => {
-    const el = onRef.current;
+    const el: any = onRef.current;
     setInit(false);
-    observer(el, doc);
+    if (el?.id) {
+      observer(el, doc, el.id);
+      dispatch(connectSidenote(doc, sidenote, base));
+    }
     return () => {
       unObserver(el, doc);
+      if (doc) updateSidenotesOffsetHeight(doc, sidenote);
+      dispatch(disconnectSidenote(doc, sidenote));
     };
-  }, [doc]);
+  }, [doc, onRef.current]);
 
   useEffect(() => {
     const el = onRef.current;
     const parentDoc = getDoc(el);
     if (parentDoc && el) {
       setDoc(parentDoc);
-      dispatch(connectSidenote(parentDoc, sidenote, base));
     }
-    return () => dispatch(disconnectSidenote(parentDoc, sidenote));
   }, [sidenote]);
 
   return (top !== null && top !== undefined) || isInit ? (

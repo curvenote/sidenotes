@@ -1,3 +1,4 @@
+import { throttleRepositionSidenotes } from '../../resizeObserver';
 import { opts } from '../../connect';
 import docReducer from './docReducer';
 import {
@@ -17,13 +18,15 @@ import {
   UI_DISCONNECT_ANCHOR_BASE,
   Sidenote,
 } from './types';
+import { sideNoteHeightMap } from './actions';
 
 export const initialState: UIState = {
   docs: {},
 };
 
-function getHeight(id: string) {
-  return document.getElementById(id)?.offsetHeight ?? 0;
+function getHeight(docId: string, id: string) {
+  sideNoteHeightMap[docId] = sideNoteHeightMap[docId] ?? {};
+  return sideNoteHeightMap[docId][id] ?? document.getElementById(id)?.offsetHeight ?? 0;
 }
 
 function getAnchorElement(state: DocState, sidenote: Sidenote): HTMLElement | null {
@@ -45,7 +48,7 @@ function getTopLeft(anchor: HTMLElement | null) {
   let top = 0;
   let left = 0;
   const article = anchor?.closest('article') || document.body;
-  while (article.contains(el)) {
+  while (article.contains(el) && el !== article) {
     top += el?.offsetTop || 0;
     left += el?.offsetLeft || 0;
     el = (el?.offsetParent ?? null) as HTMLElement | null;
@@ -54,14 +57,19 @@ function getTopLeft(anchor: HTMLElement | null) {
 }
 
 type Loc = [string, { top: number; left: number; height: number; isRemoved?: boolean }];
-function placeSidenotes(state: DocState, actionType: string): DocState {
-  // Do not place comments if it is a deselect call
-  if (actionType === UI_DESELECT_SIDENOTE) return state;
+function placeSidenotes(state: DocState): DocState {
   let findMe: Loc | undefined;
   const sorted = Object.entries(state.sidenotes)
     .map(([id, sidenote]) => {
       const element = getAnchorElement(state, sidenote);
-      const loc: Loc = [id, { ...getTopLeft(element), height: getHeight(id), isRemoved: !element }];
+      const loc: Loc = [
+        id,
+        {
+          ...getTopLeft(element),
+          height: getHeight(state.id, id),
+          isRemoved: !element || element.offsetParent === null,
+        },
+      ];
       if (id === state.selectedSidenote) {
         findMe = loc;
       }
@@ -112,18 +120,34 @@ function placeSidenotes(state: DocState, actionType: string): DocState {
 
 const uiReducer = (state = initialState, action: UIActionTypes): UIState => {
   switch (action.type) {
-    case UI_CONNECT_ANCHOR:
     case UI_CONNECT_ANCHOR_BASE:
-    case UI_CONNECT_SIDENOTE:
-    case UI_SELECT_SIDENOTE:
-    case UI_SELECT_ANCHOR:
-    case UI_DISCONNECT_ANCHOR:
     case UI_DISCONNECT_ANCHOR_BASE:
+    case UI_CONNECT_ANCHOR:
+    case UI_DISCONNECT_ANCHOR:
+    case UI_CONNECT_SIDENOTE:
     case UI_DISCONNECT_SIDENOTE:
+    case UI_SELECT_SIDENOTE:
     case UI_DESELECT_SIDENOTE:
+    case UI_SELECT_ANCHOR: {
+      const { docId } = action.payload;
+      const docState = docReducer(state.docs[docId], action);
+      // Do not place comments if it is a deselect call
+      if (action.type !== UI_DESELECT_SIDENOTE && action.type !== UI_DISCONNECT_ANCHOR) {
+        setTimeout(() => {
+          throttleRepositionSidenotes(docId);
+        }, 0);
+      }
+      return {
+        ...state,
+        docs: {
+          ...state.docs,
+          [docId]: docState,
+        },
+      };
+    }
     case UI_REPOSITION_SIDENOTES: {
       const { docId } = action.payload;
-      const nextDoc = placeSidenotes(docReducer(state.docs[docId], action), action.type);
+      const nextDoc = placeSidenotes(state.docs[docId]);
       return {
         ...state,
         docs: {
@@ -132,7 +156,6 @@ const uiReducer = (state = initialState, action: UIActionTypes): UIState => {
         },
       };
     }
-
     case UI_RESET_ALL_SIDENOTES: {
       return {
         ...state,

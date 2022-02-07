@@ -223,3 +223,23 @@ export function deselectSidenote(docId: string): AppThunk {
     }
   };
 }
+
+type HeightMap = {
+  [key: string]: {
+    [key: string]: number;
+  };
+};
+export const sideNoteHeightMap: HeightMap = {};
+// store all offsetHeight of sidenotes
+export function updateSidenotesOffsetHeight(docId: string, sidenoteId?: string, height?: number) {
+  if (sidenoteId === undefined) {
+    delete sideNoteHeightMap[docId];
+    return;
+  }
+  if (height === undefined) {
+    delete sideNoteHeightMap[docId][sidenoteId];
+    return;
+  }
+  sideNoteHeightMap[docId] = sideNoteHeightMap[docId] || {};
+  sideNoteHeightMap[docId][sidenoteId] = height;
+}
