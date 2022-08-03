@@ -17,10 +17,7 @@ jobs:
       - uses: actions/cache@v2
         with:
           path: 'node_modules'
-          key: ${{ runner.os }}-modules-${{ hashFiles('yarn.lock') }}
-      - name: install
-        run: yarn install
-      - name: lint
-        run: yarn run lint
-      - name: format
-        run: yarn run lint:format
+          key: ${{ runner.os }}-modules-${{ hashFiles('package-lock.json') }}
+      - run: npm install
+      - run: npm run lint
+      - run: npm run lint:format
