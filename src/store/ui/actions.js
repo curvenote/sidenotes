@@ -19,7 +19,7 @@ function connectAnchor(docId, sidenoteId, element) {
     return (dispatch) => {
         if (docId == null || sidenoteId == null || element == null)
             return;
-        const anchorId = typeof element === 'string' ? element : uuid_1.v4();
+        const anchorId = typeof element === 'string' ? element : (0, uuid_1.v4)();
         if (typeof element !== 'string') {
             element.anchorId = anchorId;
         }
@@ -123,7 +123,7 @@ function deselectSidenote(docId) {
             toggle.active = false;
             return;
         }
-        const selected = selectors_1.selectedSidenote(getState(), docId);
+        const selected = (0, selectors_1.selectedSidenote)(getState(), docId);
         if (selected) {
             dispatch({ type: types_1.UI_DESELECT_SIDENOTE, payload: { docId } });
         }

@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const redux_1 = require("redux");
 const src_1 = require("../src");
-const combinedReducers = redux_1.combineReducers({
+const combinedReducers = (0, redux_1.combineReducers)({
     sidenotes: src_1.reducer,
 });
 function rootReducer(state, action) {

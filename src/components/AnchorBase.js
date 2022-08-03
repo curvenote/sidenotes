@@ -1,7 +1,11 @@
 "use strict";
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
 }) : (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
@@ -31,19 +35,19 @@ const selectors_1 = require("../store/ui/selectors");
 const utils_1 = require("./utils");
 const AnchorBase = (props) => {
     const { anchor, children, className } = props;
-    const dispatch = react_redux_1.useDispatch();
-    const [doc, setDoc] = react_1.useState();
-    const [, setRef] = react_1.useState(null);
-    const selected = react_redux_1.useSelector((state) => selectors_1.isSidenoteSelected(state, doc, anchor));
-    const onRef = react_1.useCallback((el) => {
+    const dispatch = (0, react_redux_1.useDispatch)();
+    const [doc, setDoc] = (0, react_1.useState)();
+    const [, setRef] = (0, react_1.useState)(null);
+    const selected = (0, react_redux_1.useSelector)((state) => (0, selectors_1.isSidenoteSelected)(state, doc, anchor));
+    const onRef = (0, react_1.useCallback)((el) => {
         setRef(el);
-        const parentDoc = utils_1.getDoc(el);
+        const parentDoc = (0, utils_1.getDoc)(el);
         if (parentDoc) {
             setDoc(parentDoc);
-            dispatch(actions_1.connectAnchorBase(parentDoc, anchor, el));
+            dispatch((0, actions_1.connectAnchorBase)(parentDoc, anchor, el));
         }
     }, []);
-    const classes = classnames_1.default({
+    const classes = (0, classnames_1.default)({
         selected,
         [className !== null && className !== void 0 ? className : '']: Boolean(className),
     });

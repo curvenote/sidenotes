@@ -19,7 +19,7 @@ article .sidenotes .sidenote.selected {
   z-index: 1;
 }
 article .anchor:hover {
-  background-color: var(--sidenoteAnchorColorHover, #f7cf69b6);
+  background-color: var(--sidenoteAnchorColorHover, rgba(247, 207, 105, 0.7137254902));
 }
 article .anchor.selected {
   background-color: var(--sidenoteAnchorColorSelected, #f5c955);

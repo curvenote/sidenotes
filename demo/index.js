@@ -13,16 +13,16 @@ const reducers_1 = __importDefault(require("./reducers"));
 require("../styles/index.scss");
 require("./index.scss");
 const actions_1 = require("../src/store/ui/actions");
-const store = redux_1.createStore(reducers_1.default, redux_1.applyMiddleware(redux_thunk_1.default));
+const store = (0, redux_1.createStore)(reducers_1.default, (0, redux_1.applyMiddleware)(redux_thunk_1.default));
 window.store = store;
-src_1.setup(store, { padding: 10 });
+(0, src_1.setup)(store, { padding: 10 });
 const docId = 'article';
 const baseAnchor = 'anchor';
 const blue = 'blue';
 const red = 'red';
 const green = 'green';
 const someId = 'some_id';
-const deselect = () => store.dispatch(actions_1.deselectSidenote(docId));
+const deselect = () => store.dispatch((0, actions_1.deselectSidenote)(docId));
 store.dispatch(src_1.actions.connectAnchor(docId, blue, someId));
 react_dom_1.default.render(react_1.default.createElement(react_redux_1.Provider, { store: store },
     react_1.default.createElement(react_1.default.StrictMode, null,

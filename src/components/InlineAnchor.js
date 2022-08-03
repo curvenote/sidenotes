@@ -1,7 +1,11 @@
 "use strict";
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
 }) : (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
@@ -31,28 +35,31 @@ const selectors_1 = require("../store/ui/selectors");
 const utils_1 = require("./utils");
 const InlineAnchor = (props) => {
     const { sidenote, children, className } = props;
-    const dispatch = react_redux_1.useDispatch();
-    const [doc, setDoc] = react_1.useState();
-    const [ref, setRef] = react_1.useState(null);
-    react_1.useEffect(() => {
-        if (ref == null || doc == null)
-            return () => { };
-        return () => dispatch(actions_1.disconnectAnchor(doc, ref));
+    const dispatch = (0, react_redux_1.useDispatch)();
+    const [doc, setDoc] = (0, react_1.useState)();
+    const [ref, setRef] = (0, react_1.useState)(null);
+    (0, react_1.useEffect)(() => {
+        if (ref == null || doc == null) {
+            return () => {
+                return undefined;
+            };
+        }
+        return () => dispatch((0, actions_1.disconnectAnchor)(doc, ref));
     }, [doc, ref]);
-    const selected = react_redux_1.useSelector((state) => selectors_1.isSidenoteSelected(state, doc, sidenote));
-    const onClick = react_1.useCallback((event) => {
+    const selected = (0, react_redux_1.useSelector)((state) => (0, selectors_1.isSidenoteSelected)(state, doc, sidenote));
+    const onClick = (0, react_1.useCallback)((event) => {
         event.stopPropagation();
-        dispatch(actions_1.selectAnchor(doc, ref));
+        dispatch((0, actions_1.selectAnchor)(doc, ref));
     }, [doc, ref]);
-    const onRef = react_1.useCallback((el) => {
+    const onRef = (0, react_1.useCallback)((el) => {
         setRef(el);
-        const parentDoc = utils_1.getDoc(el);
+        const parentDoc = (0, utils_1.getDoc)(el);
         if (parentDoc) {
             setDoc(parentDoc);
-            dispatch(actions_1.connectAnchor(parentDoc, sidenote, el));
+            dispatch((0, actions_1.connectAnchor)(parentDoc, sidenote, el));
         }
     }, []);
-    const classes = classnames_1.default('anchor', {
+    const classes = (0, classnames_1.default)('anchor', {
         selected,
         [className !== null && className !== void 0 ? className : '']: Boolean(className),
     });

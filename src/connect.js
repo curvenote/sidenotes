@@ -16,7 +16,7 @@ exports.ref = {
 };
 const subscriptions = {};
 function subscribe(listener) {
-    const key = uuid_1.v4();
+    const key = (0, uuid_1.v4)();
     subscriptions[key] = { listener };
     return () => delete subscriptions[key];
 }
