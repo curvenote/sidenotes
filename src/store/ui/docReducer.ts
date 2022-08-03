@@ -1,3 +1,4 @@
+import { scrollElementInview } from '../../components/utils';
 import {
   UIActionTypes,
   UI_SELECT_SIDENOTE,
@@ -10,8 +11,8 @@ import {
   UI_DISCONNECT_SIDENOTE,
   UI_CONNECT_ANCHOR_BASE,
   ANCHOR_BASE,
-  UI_REPOSITION_SIDENOTES,
   UI_RESET_ALL_SIDENOTES,
+  UI_DISCONNECT_ANCHOR_BASE,
 } from './types';
 
 const docReducer = (state: DocState, action: UIActionTypes): DocState => {
@@ -27,12 +28,18 @@ const docReducer = (state: DocState, action: UIActionTypes): DocState => {
     };
   }
   switch (action.type) {
-    case UI_REPOSITION_SIDENOTES:
-      return state;
     case UI_CONNECT_SIDENOTE: {
       const { sidenoteId, baseId } = action.payload;
       const baseIds = baseId ? [baseId] : [];
       const prevSidenote = state.sidenotes[sidenoteId];
+      let inlineAnchors;
+      if (prevSidenote?.inlineAnchors && prevSidenote?.inlineAnchors.length > 0) {
+        inlineAnchors = prevSidenote?.inlineAnchors;
+      } else {
+        inlineAnchors = Object.values(state.anchors || {})
+          .filter((anchor) => anchor.sidenote === sidenoteId)
+          .map((anchor) => anchor.id);
+      }
       return {
         ...state,
         sidenotes: {
@@ -41,7 +48,7 @@ const docReducer = (state: DocState, action: UIActionTypes): DocState => {
             ...prevSidenote,
             id: sidenoteId,
             baseAnchors: [...baseIds, ...(prevSidenote?.baseAnchors ?? [])],
-            inlineAnchors: [...(prevSidenote?.inlineAnchors ?? [])],
+            inlineAnchors,
           },
         },
       };
@@ -52,7 +59,9 @@ const docReducer = (state: DocState, action: UIActionTypes): DocState => {
       if (!sidenote) return state;
 
       const sidenotes = { ...state.sidenotes };
-      delete sidenotes[sidenote.id];
+      if (Object.values(state.anchors).every((anchor) => anchor.sidenote !== sidenoteId)) {
+        delete sidenotes[sidenoteId];
+      }
 
       return {
         ...state,
@@ -70,7 +79,7 @@ const docReducer = (state: DocState, action: UIActionTypes): DocState => {
           ...state.sidenotes,
           [sidenoteId]: {
             ...prevSidenote,
-            inlineAnchors: [anchorId, ...(prevSidenote?.inlineAnchors ?? [])],
+            inlineAnchors: [...(prevSidenote?.inlineAnchors ?? []), anchorId],
           },
         },
         anchors: {
@@ -97,6 +106,16 @@ const docReducer = (state: DocState, action: UIActionTypes): DocState => {
         },
       };
     }
+    case UI_DISCONNECT_ANCHOR_BASE: {
+      const { anchorId } = action.payload;
+
+      const anchors = { ...state.anchors };
+      delete anchors[anchorId];
+      return {
+        ...state,
+        anchors,
+      };
+    }
     case UI_DISCONNECT_ANCHOR: {
       const { anchorId } = action.payload;
       const anchor = state.anchors[anchorId];
@@ -106,14 +125,24 @@ const docReducer = (state: DocState, action: UIActionTypes): DocState => {
       delete anchors[anchor.id];
 
       const sidenote = state.sidenotes[anchor.sidenote];
-
+      const inlineAnchors = [...(sidenote?.inlineAnchors ?? [])].filter((a) => a !== anchorId);
+      // all anchor has been removed
+      if (inlineAnchors.length === 0) {
+        const sn = { ...state.sidenotes };
+        delete sn[anchor.sidenote];
+        return {
+          ...state,
+          sidenotes: sn,
+          anchors,
+        };
+      }
       return {
         ...state,
         sidenotes: {
           ...state.sidenotes,
           [anchor.sidenote]: {
             ...sidenote,
-            inlineAnchors: [...(sidenote?.inlineAnchors ?? [])].filter((a) => a !== anchorId),
+            inlineAnchors,
           },
         },
         anchors,
@@ -123,10 +152,13 @@ const docReducer = (state: DocState, action: UIActionTypes): DocState => {
       const { sidenoteId } = action.payload;
 
       const prevSidenote = state.sidenotes[sidenoteId];
+      const selectedAnchor =
+        prevSidenote?.inlineAnchors?.[0] ?? prevSidenote?.baseAnchors?.[0] ?? null;
+      scrollElementInview(state.anchors[selectedAnchor]?.element); // scroll into view
       return {
         ...state,
         selectedSidenote: sidenoteId,
-        selectedAnchor: prevSidenote?.inlineAnchors?.[0] ?? prevSidenote?.baseAnchors?.[0] ?? null,
+        selectedAnchor,
         sidenotes: {
           ...state.sidenotes,
           [sidenoteId]: {

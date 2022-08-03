@@ -1,9 +1,10 @@
-import React, { useCallback, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames';
-import { connectAnchorBase } from '../store/ui/actions';
+import { connectAnchorBase, disconnectAnchorBase } from '../store/ui/actions';
 import { isSidenoteSelected } from '../store/ui/selectors';
 import { Dispatch, State } from '../store';
+import { observer, unObserver } from '../resizeObserver';
 import { getDoc } from './utils';
 
 /**
@@ -19,17 +20,21 @@ export const AnchorBase = (props: Props) => {
   const { anchor, children, className } = props;
   const dispatch = useDispatch<Dispatch>();
   const [doc, setDoc] = useState<string>();
-  const [, setRef] = useState<HTMLDivElement | null>(null);
+  const onRef = useRef(null);
 
   const selected = useSelector((state: State) => isSidenoteSelected(state, doc, anchor));
-  const onRef = useCallback((el: HTMLDivElement) => {
-    setRef(el);
+  useEffect(() => {
+    const el = onRef.current;
     const parentDoc = getDoc(el);
-    if (parentDoc) {
+    observer(el, parentDoc);
+    if (parentDoc && el) {
       setDoc(parentDoc);
       dispatch(connectAnchorBase(parentDoc, anchor, el));
     }
-    // TODO: handle disconnect in a useEffect
+    return () => {
+      unObserver(el, parentDoc);
+      dispatch(disconnectAnchorBase(parentDoc, anchor));
+    };
   }, []);
   const classes = classNames({
     selected,
