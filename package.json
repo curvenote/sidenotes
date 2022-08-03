@@ -12,12 +12,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/curvenote/editor.git"
+    "url": "git+https://github.com/curvenote/sidenotes.git"
   },
   "bugs": {
-    "url": "https://github.com/curvenote/editor/issues"
+    "url": "https://github.com/curvenote/sidenotes/issues"
   },
-  "homepage": "https://curvenote.dev/sidenotes",
+  "homepage": "https://github.com/curvenote/sidenotes",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
   "dependencies": {},
