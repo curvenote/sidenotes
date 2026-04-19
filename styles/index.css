@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  article .sidenotes {
+    @apply absolute top-0 w-[300px] -right-[320px];
+  }
+}

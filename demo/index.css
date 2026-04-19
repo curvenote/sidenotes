@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  article {
+    margin: auto;
+    max-width: 800px;
+    padding: 0 10px;
+    position: relative;
+    --sidenoteAnchorColor: #f8e4b1;
+    --sidenoteAnchorColorHover: #f7cf69b6;
+    --sidenoteAnchorColorSelected: #f5c955;
+  }
+}
+
+@layer components {
+  article .sidenotes {
+    @apply absolute top-0 w-[300px] -right-[320px];
+  }
+}

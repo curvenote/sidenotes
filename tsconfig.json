@@ -1,39 +1,24 @@
 {
   "compilerOptions": {
-    "experimentalDecorators": true,
-    "target": "es2015",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
-    "outDir": "dist",
-    "baseUrl": ".",
-    "allowJs": true,
-    "skipLibCheck": true,
+    "target": "ES2020",
+    "lib": ["DOM", "DOM.Iterable", "ES2020"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "strict": true,
+    "noImplicitAny": true,
+    "noFallthroughCasesInSwitch": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "noImplicitAny": true,
-    "strict": true,
-    "sourceMap": true,
     "forceConsistentCasingInFileNames": true,
-    "module": "commonjs",
-    "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "removeComments": true,
-    "jsx": "react",
-    "typeRoots": [
-      "./node_modules/@types"
-    ],
+    "skipLibCheck": true,
+    "sourceMap": true,
     "declaration": true,
-    "noFallthroughCasesInSwitch": true
+    "noEmit": true,
+    "types": ["node"]
   },
-  "include": [
-    "src/**/*",
-    "demo/**/*"
-  ],
-  "exclude": [
-    "**/*.spec.ts"
-  ]
+  "include": ["src/**/*", "demo/**/*", "vite.config.ts", "vite.lib.config.ts"],
+  "exclude": ["dist", "dist-demo", "node_modules"]
 }
