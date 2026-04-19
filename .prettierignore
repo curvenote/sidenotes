@@ -1,0 +1,6 @@
+dist
+dist-demo
+node_modules
+bun.lock
+*.min.*
+CHANGELOG.md

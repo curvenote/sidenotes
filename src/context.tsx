@@ -33,10 +33,8 @@ export const SidenotesProvider = ({
   const autoId = useId();
   const docId = docIdProp ?? autoId;
 
-  const [state, baseDispatch] = useReducer(
-    uiReducer,
-    undefined,
-    () => createInitialState(docId, padding),
+  const [state, baseDispatch] = useReducer(uiReducer, undefined, () =>
+    createInitialState(docId, padding),
   );
 
   const stateRef = useRef(state);

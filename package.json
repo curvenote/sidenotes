@@ -42,7 +42,10 @@
     "build:demo": "vite build",
     "typecheck": "tsc --noEmit",
     "preview": "vite preview",
-    "format": "prettier --check \"src/**/*.{ts,tsx,css}\" \"demo/**/*.{ts,tsx,css}\""
+    "lint": "eslint \"src/**/*.{ts,tsx}\" \"demo/**/*.{ts,tsx}\"",
+    "lint:fix": "eslint --fix \"src/**/*.{ts,tsx}\" \"demo/**/*.{ts,tsx}\"",
+    "format": "prettier --check \"src/**/*.{ts,tsx,css}\" \"demo/**/*.{ts,tsx,css,html}\"",
+    "format:fix": "prettier --write \"src/**/*.{ts,tsx,css}\" \"demo/**/*.{ts,tsx,css,html}\""
   },
   "devDependencies": {
     "@types/node": "^20.11.0",
@@ -52,8 +55,15 @@
     "@vitejs/plugin-react": "^4.2.1",
     "autoprefixer": "^10.4.17",
     "classnames": "^2.5.1",
+    "@eslint/js": "^9.18.0",
+    "eslint": "^9.18.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-react": "^7.37.3",
+    "eslint-plugin-react-hooks": "^5.1.0",
+    "globals": "^15.14.0",
     "postcss": "^8.4.33",
     "prettier": "^3.2.4",
+    "typescript-eslint": "^8.20.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "tailwindcss": "^3.4.1",
