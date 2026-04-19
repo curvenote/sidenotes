@@ -27,7 +27,6 @@ export type Anchor = {
 
 export type UIState = {
   padding: number;
-  docId: string;
   selectedSidenote: string | null;
   selectedAnchor: string | null;
   sidenotes: Record<string, Sidenote>;

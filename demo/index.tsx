@@ -10,7 +10,6 @@ import {
 } from '../src';
 import './index.css';
 
-const docId = 'article';
 const baseAnchor = 'anchor';
 const blue = 'blue';
 const red = 'red';
@@ -38,7 +37,7 @@ function Demo() {
   }, [dispatch]);
 
   return (
-    <article id={docId} onClick={deselect}>
+    <article onClick={deselect}>
       <h1 className="text-3xl font-bold">sidenotes</h1>
       <div className="flex gap-2">
         <a href="https://www.npmjs.com/package/sidenotes" title="sidenotes on npm">
@@ -126,7 +125,7 @@ if (!container) throw new Error('Missing #root');
 
 createRoot(container).render(
   <React.StrictMode>
-    <SidenotesProvider docId={docId} padding={10}>
+    <SidenotesProvider padding={10}>
       <Demo />
     </SidenotesProvider>
   </React.StrictMode>,

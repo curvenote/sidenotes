@@ -15,9 +15,8 @@ import {
   ANCHOR_BASE,
 } from './types';
 
-export const createInitialState = (docId: string, padding = 10): UIState => ({
+export const createInitialState = (padding = 10): UIState => ({
   padding,
-  docId,
   selectedSidenote: null,
   selectedAnchor: null,
   sidenotes: {},
@@ -231,7 +230,7 @@ export const uiReducer = (state: UIState, action: UIActionTypes): UIState => {
     case UI_DESELECT_SIDENOTE:
       return { ...state, selectedAnchor: null, selectedSidenote: null };
     case UI_RESET_ALL_SIDENOTES:
-      return createInitialState(state.docId, state.padding);
+      return createInitialState(state.padding);
     default:
       return state;
   }

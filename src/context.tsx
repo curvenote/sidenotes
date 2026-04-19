@@ -1,41 +1,22 @@
-import React, {
-  createContext,
-  useContext,
-  useMemo,
-  useReducer,
-  useRef,
-  useCallback,
-  useId,
-} from 'react';
+import React, { createContext, useCallback, useContext, useMemo, useReducer, useRef } from 'react';
 import uiReducer, { createInitialState } from './store/ui/reducer';
-import type { State, Dispatch, SidenotesUIActions } from './store/types';
+import type { Dispatch, SidenotesUIActions, State } from './store/types';
 
 type SidenotesContextValue = {
   state: State;
   dispatch: Dispatch;
   getState: () => State;
-  docId: string;
 };
 
 const SidenotesContext = createContext<SidenotesContextValue | null>(null);
 
 export type SidenotesProviderProps = {
-  docId?: string;
   padding?: number;
   children: React.ReactNode;
 };
 
-export const SidenotesProvider = ({
-  docId: docIdProp,
-  padding = 10,
-  children,
-}: SidenotesProviderProps) => {
-  const autoId = useId();
-  const docId = docIdProp ?? autoId;
-
-  const [state, baseDispatch] = useReducer(uiReducer, undefined, () =>
-    createInitialState(docId, padding),
-  );
+export const SidenotesProvider = ({ padding = 10, children }: SidenotesProviderProps) => {
+  const [state, baseDispatch] = useReducer(uiReducer, undefined, () => createInitialState(padding));
 
   const stateRef = useRef(state);
   stateRef.current = state;
@@ -45,10 +26,7 @@ export const SidenotesProvider = ({
     baseDispatch(action);
   }, []);
 
-  const value = useMemo(
-    () => ({ state, dispatch, getState, docId }),
-    [state, dispatch, getState, docId],
-  );
+  const value = useMemo(() => ({ state, dispatch, getState }), [state, dispatch, getState]);
 
   return <SidenotesContext.Provider value={value}>{children}</SidenotesContext.Provider>;
 };
@@ -73,15 +51,7 @@ export function useSidenotesSelector<T>(selector: (state: State) => T): T {
   return selector(useSidenotesContext().state);
 }
 
-export function useSidenotesDocId(): string {
-  return useSidenotesContext().docId;
-}
-
-export function useSidenotesStore(): {
-  getState: () => State;
-  dispatch: Dispatch;
-  docId: string;
-} {
-  const { dispatch, getState, docId } = useSidenotesContext();
-  return { dispatch, getState, docId };
+export function useSidenotesStore(): { getState: () => State; dispatch: Dispatch } {
+  const { dispatch, getState } = useSidenotesContext();
+  return { dispatch, getState };
 }

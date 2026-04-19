@@ -5,7 +5,6 @@ export {
   useSidenotesState,
   useSidenotesDispatch,
   useSidenotesSelector,
-  useSidenotesDocId,
   useSidenotesStore,
 } from './context';
 export type { SidenotesProviderProps } from './context';

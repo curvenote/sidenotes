@@ -18,7 +18,3 @@ export function isAnchorSelected(state: State, anchorId?: string | null) {
   if (anchorId == null) return false;
   return state.selectedAnchor === anchorId;
 }
-
-export function docId(state: State) {
-  return state.docId;
-}
