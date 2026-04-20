@@ -2,22 +2,32 @@ name: CI
 
 on:
   push:
-    branches: [main, ci-*]
+    branches: [ main, ci-* ]
   pull_request:
-    branches: [main]
+    branches: [ main ]
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - run: bun install --frozen-lockfile
+      - run: bun run lint
+      - run: bun run format
+      - run: bun run typecheck
+
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
         with:
-          node-version: 12.x
-      - uses: actions/cache@v2
-        with:
-          path: 'node_modules'
-          key: ${{ runner.os }}-modules-${{ hashFiles('package-lock.json') }}
-      - run: npm install
-      - run: npm run lint
-      - run: npm run lint:format
+          bun-version: latest
+      - run: bun install --frozen-lockfile
+      - run: bun run build
+      - run: bun run build:demo
+      - name: Render demo and assert React output
+        run: bun run test

@@ -9,7 +9,7 @@
 
 ## Goals
 
-- Place notes/comments to the side of one or more documents with inline references.
+- Place notes/comments to the side of a document with inline references.
 - When an inline reference is clicked, animate the relevant sidenote to be as close as possible and move non-relevant sidenotes out of the way without overlapping.
 - Do not provide UI or impose any styling, **only placement**.
 
@@ -18,122 +18,120 @@
 - Comment streams next to a document. This is showing [Curvenote](https://curvenote.com), which is a scientific writing platform that connects to Jupyter.
   [![Comments Using Sidenotes](https://github.com/curvenote/sidenotes/raw/main/images/comments.gif)](https://curvenote.com)
 
-## Choices
+## Stack
 
-- Use React, Redux & Typescript
-- Used Redux rather than a hook approach (open to discussion if people are passionate!)
-
-## Constraints
-
-- Multiple documents on the page, currently based on the wrapping `<article>` ID
-- Multiple inline references per sidenote, wrapped in `<InlineAnchor>`; `InlineAnchor` is a `span`
-- Have fallback placements to a `<AnchorBase>`; `AnchorBase` is a `div`
-- Provide actions to attach non-react bases, anchors or reposition sidenotes
-- All positioning is based on the article, and works with `relative`, `fixed` or `absolute` positioning.
+- React 18/19 with `useReducer` + Context (no Redux dependency)
+- TypeScript 6
+- Vite 8 for the demo, `tsc` for the library
+- Bun as the package manager
 
 ## Demo
 
-The demo is pretty basic, and not nearly as pretty as the gif above, just blue, green and red divs floating around.
-See [index.tsx](/demo/index.tsx) for full the code/setup.
+See [`demo/index.tsx`](/demo/index.tsx) for the full example.
 
-```
-yarn install
-yarn start
+```bash
+bun install
+bun run dev
 ```
 
 ![sidenotes](https://github.com/curvenote/sidenotes/raw/main/images/sidenotes.gif)
 
-## Getting Started:
+## Getting started
 
-```
-yarn add sidenotes
-```
-
-## React Setup:
-
-```html
-<article id="{docId}" onClick="{deselect}">
-  <AnchorBase anchor="{baseId}">
-    Content with <InlineAnchor sidenote="{sidenoteId}">inline reference</InlineAnchor>
-  </AnchorBase>
-  <div className="sidenotes">
-    <Sidenote sidenote="{sidenoteId}" base="{baseId}"> Your custom UI, e.g. a comment </Sidenote>
-  </div>
-</article>
+```bash
+bun add sidenotes
+# or: npm install sidenotes
 ```
 
-The `sidenotes` class is the only CSS that is recommended. You can import it directly, or [look at it](/styles/index.scss) and change it (~30 lines of `scss`). To import from javascript (assuming your bundler works with CSS):
+## Usage
 
-```javascript
-import 'sidenotes/dist/sidenotes.css';
-```
-
-## Simple Javascript
-
-You can also use sidenotes from vanilla javascript, this is done by first connecting the ID.
+Wrap the content that contains sidenotes in a `<SidenotesProvider>`. Put inline references inside `<InlineAnchor>` and the floating sidenote cards inside `<Sidenote>`. `<AnchorBase>` is an optional fallback target used when no inline anchor is mounted.
 
 ```tsx
-// First dispatch the action to connect to any ID in the dom
-store.dispatch(actions.connectAnchor(docId, sidenoteId, anchorId));
+import {
+  SidenotesProvider,
+  Sidenote,
+  InlineAnchor,
+  AnchorBase,
+  useSidenotes,
+} from 'sidenotes';
 
-// Then setup your handlers to select that anchor on click
-<span
-  id={anchorId}
-  onClickCapture={(event) => {
-    event.stopPropagation();
-    store.dispatch(actions.selectAnchor(docId, anchorId));
-  }}
->
-  Select a Sidenote with JavaScript! 🚀
-</span>;
+function Doc() {
+  const { deselect } = useSidenotes();
+  return (
+    <article onClick={deselect}>
+      <AnchorBase anchor="anchor">
+        Content with <InlineAnchor sidenote="note-1">an inline reference</InlineAnchor>.
+      </AnchorBase>
+      <div className="sidenotes">
+        <Sidenote sidenote="note-1" base="anchor">
+          Your custom UI, e.g. a comment.
+        </Sidenote>
+      </div>
+    </article>
+  );
+}
 
-// To clean up later, disconnect the anchor
-store.dispatch(actions.disconnectAnchor(docId, anchorId));
+export default function App() {
+  return (
+    <SidenotesProvider padding={10}>
+      <Doc />
+    </SidenotesProvider>
+  );
+}
 ```
 
-## Redux state
+### The `useSidenotes()` hook
 
-Once you create your own store, add a `sidenotes.reducer`, it must be called `sidenotes`. Then pass the `store` to `setup` with options of padding between sidenotes.
+`useSidenotes()` is the public surface for interacting with sidenotes imperatively. It is backed by a stable control context and **does not re-render when the selection changes** — read the current selection by calling the getter functions.
 
-```javascript
-import { combineReducers, applyMiddleware, createStore } from 'redux';
-import thunkMiddleware from 'redux-thunk';
-import * as sidenotes from 'sidenotes';
-
-const reducer = combineReducers({
-  yourStuff: yourReducers,
-  sidenotes: sidenotes.reducer, // Add this to your reducers
-});
-// Create your store as normal, must have thunkMiddleware
-const store = createStore(reducer, applyMiddleware(thunkMiddleware));
-
-// Then ensure that you pass the `store` to setup the sidenotes
-sidenotes.setup(store as sidenotes.Store, { padding: 10 })
+```ts
+const {
+  getSelectedSidenote, // () => string | null
+  getSelectedAnchor,   // () => string | null
+  selectSidenote,      // (sidenoteId: string) => void
+  selectAnchor,        // (anchor: string | HTMLElement) => void
+  deselect,            // () => void
+  reposition,          // () => void — recompute positions (e.g. after layout change)
+} = useSidenotes();
 ```
 
-## Redux State
+If you need to re-render a component when the selection changes, read the state directly from context — the getters are intentionally decoupled from React's re-render loop.
 
-The `sidenotes.ui` state has the following structure:
+Everything else (reducer, action creators, selectors, dispatch) is internal.
 
+### Styling
+
+The library **does not ship any CSS**. Components render with stable class names so you can style them however you want:
+
+| Component      | Element / class                                |
+| -------------- | ---------------------------------------------- |
+| `InlineAnchor` | `<span class="anchor [selected]">`             |
+| `AnchorBase`   | `<div class="[selected]">`                     |
+| `Sidenote`     | `<div class="sidenote [selected]">`            |
+| Container     | whatever wraps your `<Sidenote>` list (e.g. `<div className="sidenotes">`) |
+
+The demo's [`demo/index.css`](/demo/index.css) has a full working Tailwind v4 setup you can copy as a starting point.
+
+## Constraints
+
+- Sidenotes positioning is computed relative to a wrapping `<article>` element.
+- Each `<SidenotesProvider>` owns one document. Use multiple providers if you need more than one.
+- `InlineAnchor` renders a `<span>`; `AnchorBase` renders a `<div>`; `Sidenote` renders a `<div>`.
+
+## Development
+
+```bash
+bun install
+bun run dev           # demo with HMR at http://localhost:3013
+bun run build         # type-check + emit library to dist/
+bun run build:demo    # build the demo site to dist-demo/
+bun run typecheck
+bun run lint
+bun run format
+bun run render-check  # build the demo and assert React output in happy-dom
 ```
-sidenotes:
-  ui:
-    docs:
-      [docId]:
-        anchors:
-          [anchorId]: { id: string, sidenote: string, element: [span] }
-        sidenotes:
-          [sidenoteId]: { inlineAnchors: string[], top: number, id: string, baseAnchors: string[] }
-        id: string
-        selectedAnchor: string
-        selectedNote: string
-```
-
-## Actions
-
-It is common to put a click handler on the body (or similar) to deselect any sidenotes. This can be difficult to stop in some cases, but can be anticipated with a `onClickCapture` that fires the
-`disableNextDeselectSidenote` action. This intercepts the redux action and stops it from happening for one time.
 
 ## Roadmap
 
-- Have a better mobile solution that places notes at the bottom.
+- Better mobile layout that places notes at the bottom.

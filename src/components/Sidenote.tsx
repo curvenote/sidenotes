@@ -1,54 +1,48 @@
-import React, { useCallback, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useCallback, useEffect } from 'react';
 import classNames from 'classnames';
-import { connectSidenote, selectSidenote } from '../store/ui/actions';
-import { sidenoteTop, isSidenoteSelected } from '../store/ui/selectors';
-import { Dispatch, State } from '../store';
-import { getDoc } from './utils';
+import { connectSidenote, disconnectSidenote, selectSidenote } from '../actions.js';
+import { sidenoteTop, isSidenoteSelected } from '../selectors.js';
+import { useSidenotesDispatch, useSidenotesSelector } from '../context.js';
 
 type Props = {
   base?: string;
   sidenote: string;
   children: React.ReactNode;
+  className?: string;
 };
 
-export const Sidenote = (props: Props) => {
-  const { base, sidenote, children } = props;
-  const dispatch = useDispatch<Dispatch>();
-  const [doc, setDoc] = useState<string>();
+export const Sidenote = ({ base, sidenote, children, className }: Props) => {
+  const dispatch = useSidenotesDispatch();
 
-  const selected = useSelector((state: State) => isSidenoteSelected(state, doc, sidenote));
-  const top = useSelector((state: State) => sidenoteTop(state, doc, sidenote));
+  const selected = useSidenotesSelector((state) => isSidenoteSelected(state, sidenote));
+  const top = useSidenotesSelector((state) => sidenoteTop(state, sidenote));
+
+  useEffect(() => {
+    dispatch(connectSidenote(sidenote, base));
+    return () => {
+      dispatch(disconnectSidenote(sidenote));
+    };
+  }, [dispatch, sidenote, base]);
+
   const onClick = useCallback(
     (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
       event.stopPropagation();
       if (selected) return;
-      dispatch(selectSidenote(doc, sidenote));
+      dispatch(selectSidenote(sidenote));
     },
-    [doc, selected],
+    [selected, dispatch, sidenote],
   );
-  const onRef = useCallback((el: HTMLDivElement) => {
-    const parentDoc = getDoc(el);
-    if (parentDoc) {
-      setDoc(parentDoc);
-      dispatch(connectSidenote(parentDoc, sidenote, base));
-    }
-  }, []);
+
   return (
     <div
       id={sidenote}
-      className={classNames('sidenote', { selected })}
+      className={classNames('sidenote', { selected }, className)}
       onClick={onClick}
-      ref={onRef}
       style={{ top }}
     >
       {children}
     </div>
   );
-};
-
-Sidenote.defaultProps = {
-  base: undefined,
 };
 
 export default Sidenote;

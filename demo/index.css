@@ -1,0 +1,44 @@
+@import 'tailwindcss';
+
+@source "../src/**/*.{ts,tsx}";
+@source "./**/*.{ts,tsx,html}";
+
+@layer base {
+  article {
+    margin: auto;
+    max-width: 800px;
+    padding: 0 10px;
+    position: relative;
+    --sidenoteAnchorColor: #f8e4b1;
+    --sidenoteAnchorColorHover: #f7cf69b6;
+    --sidenoteAnchorColorSelected: #f5c955;
+  }
+}
+
+@layer components {
+  article .sidenotes {
+    @apply absolute top-0 w-[300px] -right-[320px];
+  }
+
+  article .sidenote {
+    @apply absolute w-[280px] left-[10px] transition-all duration-300;
+    transition-timing-function: cubic-bezier(0.655, 0.18, 0.3, 1.255);
+  }
+
+  article .sidenote.selected {
+    @apply -left-[10px] opacity-100 z-10;
+  }
+
+  article .anchor {
+    background-color: var(--sidenoteAnchorColor);
+    cursor: pointer;
+  }
+
+  article .anchor:hover {
+    background-color: var(--sidenoteAnchorColorHover);
+  }
+
+  article .anchor.selected {
+    background-color: var(--sidenoteAnchorColorSelected);
+  }
+}

@@ -1,5 +1,6 @@
 *.code-workspace
 node_modules
 dist
+dist-demo
 .yalc/
 yalc.lock

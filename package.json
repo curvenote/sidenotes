@@ -1,6 +1,6 @@
 {
   "name": "sidenotes",
-  "version": "1.1.1",
+  "version": "2.0.1",
   "license": "MIT",
   "publishConfig": {
     "access": "public"
@@ -18,70 +18,58 @@
     "url": "https://github.com/curvenote/sidenotes/issues"
   },
   "homepage": "https://github.com/curvenote/sidenotes",
-  "main": "dist/src/index.js",
-  "types": "dist/src/index.d.ts",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
   "dependencies": {},
   "peerDependencies": {
-    "classnames": "^2.3.1",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-redux": "^8.0.2",
-    "redux": "^4.2.0",
-    "redux-thunk": "^2.4.1",
-    "uuid": "^8.3.2"
+    "classnames": "^2.5.1",
+    "react": ">=18",
+    "react-dom": ">=18",
+    "uuid": ">=9"
   },
   "scripts": {
-    "clean": "rm -rf dist;",
-    "compile": "yarn run clean; tsc;",
-    "build-css": "sass styles/index.scss dist/sidenotes.css",
-    "build": "yarn run clean; tsc; yarn run build-css; webpack --config webpack.prod.js",
-    "prepublishOnly": "yarn run build;",
-    "start": "webpack serve --open --config webpack.dev.js",
-    "dev": "webpack --config webpack.dev.js",
-    "lint": "eslint \"src/**/*.ts\" -c .eslintrc.js",
-    "lint:format": "prettier --check \"src/**/*.ts\" \"styles/**/*.scss\" \"src/**/*.tsx\"",
-    "watch": "tsc -w -p ."
+    "clean": "rm -rf dist dist-demo",
+    "dev": "vite",
+    "build": "bun run clean && tsc -p tsconfig.build.json",
+    "build:demo": "vite build",
+    "typecheck": "tsc --noEmit",
+    "preview": "vite preview",
+    "lint": "eslint \"src/**/*.{ts,tsx}\" \"demo/**/*.{ts,tsx}\"",
+    "lint:fix": "eslint --fix \"src/**/*.{ts,tsx}\" \"demo/**/*.{ts,tsx}\"",
+    "format": "prettier --check \"src/**/*.{ts,tsx,css}\" \"demo/**/*.{ts,tsx,css,html}\"",
+    "format:fix": "prettier --write \"src/**/*.{ts,tsx,css}\" \"demo/**/*.{ts,tsx,css,html}\"",
+    "test": "bun run build:demo && bun scripts/render-check.mjs"
   },
   "devDependencies": {
-    "@types/classnames": "^2.3.1",
-    "@types/jest": "^28.1.6",
-    "@types/node": "^18.6.3",
-    "@types/react": "^17.0.48",
-    "@types/react-dom": "^18.0.6",
-    "@types/react-redux": "^7.1.24",
-    "@types/uuid": "^8.3.4",
-    "classnames": "^2.3.1",
-    "css-loader": "^6.7.1",
-    "eslint-config-curvenote": "*",
-    "express": "^4.18.1",
-    "html-webpack-plugin": "^5.5.0",
-    "prettier": "^2.7.1",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-redux": "^8.0.2",
-    "redux-thunk": "^2.4.1",
-    "sass": "^1.54.1",
-    "sass-loader": "^13.0.2",
-    "style-loader": "^3.3.1",
-    "ts-loader": "^9.3.1",
-    "typescript": "^4.7.4",
-    "uuid": "^8.3.2",
-    "webpack": "^5.74.0",
-    "webpack-cli": "^4.10.0",
-    "webpack-dev-server": "^4.9.3",
-    "webpack-merge": "^5.8.0"
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+    "@eslint/js": "^10.0.1",
+    "@happy-dom/global-registrator": "^20.9.0",
+    "@tailwindcss/vite": "^4.2.2",
+    "@types/node": "^25.6.0",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@types/uuid": "^11.0.0",
+    "@vitejs/plugin-react": "^6.0.1",
+    "classnames": "^2.5.1",
+    "eslint": "^10.2.1",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "globals": "^17.5.0",
+    "happy-dom": "^20.9.0",
+    "prettier": "^3.8.3",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5",
+    "tailwindcss": "^4.2.2",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.58.2",
+    "uuid": "^14.0.0",
+    "vite": "^8.0.8"
   },
   "files": [
     "dist"
