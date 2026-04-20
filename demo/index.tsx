@@ -1,6 +1,12 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import { SidenotesProvider, Sidenote, InlineAnchor, AnchorBase, useSidenotes } from '../src/index.js';
+import {
+  SidenotesProvider,
+  Sidenote,
+  InlineAnchor,
+  AnchorBase,
+  useSidenotes,
+} from '../src/index.js';
 import './index.css';
 
 const baseAnchor = 'anchor';
