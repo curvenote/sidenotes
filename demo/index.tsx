@@ -31,13 +31,21 @@ function Demo() {
       </button>
       <AnchorBase anchor={baseAnchor} className="p-[10px] border-[3px] border-green-600">
         <p>
-          <InlineAnchor sidenote={blue}>A sidenote</InlineAnchor> and{' '}
-          <InlineAnchor sidenote={red}>another red sidenote!</InlineAnchor>
+          <InlineAnchor sidenote={blue} className="text-blue-600">
+            A sidenote
+          </InlineAnchor>{' '}
+          and{' '}
+          <InlineAnchor sidenote={red} className="text-red-600">
+            another red sidenote!
+          </InlineAnchor>
         </p>
         <ul className="list-disc pl-6">
           <li>
-            Must see all the <InlineAnchor sidenote={red}>sidenotes</InlineAnchor> at once, so they
-            should be in the margins!
+            Must see all the{' '}
+            <InlineAnchor sidenote={red} className="text-red-600">
+              sidenotes
+            </InlineAnchor>{' '}
+            at once, so they should be in the margins!
           </li>
           <li>
             Must be associated with a block (a small bit of content), that is versioned and must
@@ -45,16 +53,24 @@ function Demo() {
           </li>
         </ul>
         <p>
-          The sidenotes location <InlineAnchor sidenote={blue}>information</InlineAnchor> is a stand
-          alone package.
+          The sidenotes location{' '}
+          <InlineAnchor sidenote={blue} className="text-blue-600">
+            information
+          </InlineAnchor>{' '}
+          is a stand alone package.
         </p>
         <p>
           Has a mini reducer in there to keep internal state. Positions things based on height of
-          each <InlineAnchor sidenote={blue}>sidenote</InlineAnchor>. The animation can be handled
-          by CSS.
+          each{' '}
+          <InlineAnchor sidenote={blue} className="text-blue-600">
+            sidenote
+          </InlineAnchor>
+          . The animation can be handled by CSS.
         </p>
         <p>
-          <InlineAnchor sidenote={red}>Next sidenote!</InlineAnchor>
+          <InlineAnchor sidenote={red} className="text-red-600">
+            Next sidenote!
+          </InlineAnchor>
         </p>
       </AnchorBase>
       <div className="sidenotes">
