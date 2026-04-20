@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect } from 'react';
 import classNames from 'classnames';
-import { connectSidenote, disconnectSidenote, selectSidenote } from '../actions';
-import { sidenoteTop, isSidenoteSelected } from '../selectors';
-import { useSidenotesDispatch, useSidenotesSelector } from '../context';
+import { connectSidenote, disconnectSidenote, selectSidenote } from '../actions.js';
+import { sidenoteTop, isSidenoteSelected } from '../selectors.js';
+import { useSidenotesDispatch, useSidenotesSelector } from '../context.js';
 
 type Props = {
   base?: string;

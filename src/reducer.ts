@@ -13,7 +13,7 @@ import {
   UI_DISCONNECT_SIDENOTE,
   Sidenote,
   ANCHOR_BASE,
-} from './types';
+} from './types.js';
 
 export const createInitialState = (padding = 10): State => ({
   padding,

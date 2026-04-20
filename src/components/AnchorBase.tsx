@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import classNames from 'classnames';
-import { connectAnchorBase, disconnectAnchor } from '../actions';
-import { isSidenoteSelected } from '../selectors';
-import { useSidenotesDispatch, useSidenotesSelector } from '../context';
+import { connectAnchorBase, disconnectAnchor } from '../actions.js';
+import { isSidenoteSelected } from '../selectors.js';
+import { useSidenotesDispatch, useSidenotesSelector } from '../context.js';
 
 type Props = {
   anchor: string;

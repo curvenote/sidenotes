@@ -11,7 +11,7 @@ import {
   UI_REPOSITION_SIDENOTES,
   UI_RESET_ALL_SIDENOTES,
   Action,
-} from './types';
+} from './types.js';
 
 export function connectSidenote(sidenoteId: string, baseId?: string): Action {
   return { type: UI_CONNECT_SIDENOTE, payload: { sidenoteId, baseId } };

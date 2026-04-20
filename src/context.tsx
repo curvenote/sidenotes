@@ -7,8 +7,8 @@ import React, {
   useReducer,
   useRef,
 } from 'react';
-import reducer, { createInitialState } from './reducer';
-import type { Action, Dispatch, State } from './types';
+import reducer, { createInitialState } from './reducer.js';
+import type { Action, Dispatch, State } from './types.js';
 
 type ControlValue = {
   dispatch: Dispatch;

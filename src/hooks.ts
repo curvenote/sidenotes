@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react';
-import { useSidenotesControl } from './context';
-import { deselectSidenote, repositionSidenotes, selectAnchor, selectSidenote } from './actions';
+import { useSidenotesControl } from './context.js';
+import { deselectSidenote, repositionSidenotes, selectAnchor, selectSidenote } from './actions.js';
 
 export type UseSidenotes = {
   getSelectedSidenote: () => string | null;

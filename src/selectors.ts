@@ -1,4 +1,4 @@
-import type { State } from './types';
+import type { State } from './types.js';
 
 export function selectedSidenote(state: State) {
   return state.selectedSidenote;

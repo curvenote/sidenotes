@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import classNames from 'classnames';
-import { connectAnchor, disconnectAnchor, selectAnchor } from '../actions';
-import { isSidenoteSelected } from '../selectors';
-import { useSidenotesDispatch, useSidenotesSelector } from '../context';
+import { connectAnchor, disconnectAnchor, selectAnchor } from '../actions.js';
+import { isSidenoteSelected } from '../selectors.js';
+import { useSidenotesDispatch, useSidenotesSelector } from '../context.js';
 
 type Props = {
   sidenote: string;
