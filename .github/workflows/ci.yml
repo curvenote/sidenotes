@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [main, ci-*]
+    branches: [ main, ci-* ]
   pull_request:
-    branches: [main]
+    branches: [ main ]
 
 jobs:
   lint:
@@ -18,7 +18,6 @@ jobs:
       - run: bun run lint
       - run: bun run format
       - run: bun run typecheck
-      - run: bun run build
 
   test:
     runs-on: ubuntu-latest
@@ -28,5 +27,7 @@ jobs:
         with:
           bun-version: latest
       - run: bun install --frozen-lockfile
+      - run: bun run build
+      - run: bun run build:demo
       - name: Render demo and assert React output
-        run: bun run render-check
+        run: bun run test

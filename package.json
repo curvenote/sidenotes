@@ -45,7 +45,7 @@
     "lint:fix": "eslint --fix \"src/**/*.{ts,tsx}\" \"demo/**/*.{ts,tsx}\"",
     "format": "prettier --check \"src/**/*.{ts,tsx,css}\" \"demo/**/*.{ts,tsx,css,html}\"",
     "format:fix": "prettier --write \"src/**/*.{ts,tsx,css}\" \"demo/**/*.{ts,tsx,css,html}\"",
-    "render-check": "bun run build:demo && bun scripts/render-check.mjs"
+    "test": "bun run build:demo && bun scripts/render-check.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
