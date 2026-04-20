@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import classNames from 'classnames';
-import { connectAnchorBase } from '../actions';
+import { connectAnchorBase, disconnectAnchor } from '../actions';
 import { isSidenoteSelected } from '../selectors';
 import { useSidenotesDispatch, useSidenotesSelector } from '../context';
 
@@ -19,6 +19,10 @@ export const AnchorBase = ({ anchor, children, className }: Props) => {
   useEffect(() => {
     if (!ref) return;
     dispatch(connectAnchorBase(anchor, ref));
+    return () => {
+      const action = disconnectAnchor(anchor);
+      if (action) dispatch(action);
+    };
   }, [ref, dispatch, anchor]);
 
   return (

@@ -168,6 +168,19 @@ export const uiReducer = (state: State, action: Action): State => {
       if (!anchor) return state;
       const anchors = { ...state.anchors };
       delete anchors[anchor.id];
+
+      if (anchor.sidenote === ANCHOR_BASE) {
+        // Base anchors are referenced from sidenotes' baseAnchors arrays; strip
+        // this anchorId out of every one.
+        const sidenotes = Object.fromEntries(
+          Object.entries(state.sidenotes).map(([id, s]) => [
+            id,
+            { ...s, baseAnchors: s.baseAnchors.filter((a) => a !== anchorId) },
+          ]),
+        );
+        return placeSidenotes({ ...state, sidenotes, anchors }, action.type);
+      }
+
       const sidenote = state.sidenotes[anchor.sidenote];
       return placeSidenotes(
         {
