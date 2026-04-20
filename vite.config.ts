@@ -5,6 +5,7 @@ import { resolve } from 'node:path';
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  base: './',
   root: resolve(__dirname, 'demo'),
   server: {
     port: 3013,
