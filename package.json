@@ -25,8 +25,7 @@
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
-    },
-    "./style.css": "./dist/sidenotes.css"
+    }
   },
   "dependencies": {},
   "peerDependencies": {
@@ -38,20 +37,19 @@
   "scripts": {
     "clean": "rm -rf dist dist-demo",
     "dev": "vite",
-    "build": "bun run clean && tsc -p tsconfig.build.json && bun run build:css",
-    "build:css": "tailwindcss -i ./styles/index.css -o ./dist/sidenotes.css --minify",
+    "build": "bun run clean && tsc -p tsconfig.build.json",
     "build:demo": "vite build",
     "typecheck": "tsc --noEmit",
     "preview": "vite preview",
     "lint": "eslint \"src/**/*.{ts,tsx}\" \"demo/**/*.{ts,tsx}\"",
     "lint:fix": "eslint --fix \"src/**/*.{ts,tsx}\" \"demo/**/*.{ts,tsx}\"",
     "format": "prettier --check \"src/**/*.{ts,tsx,css}\" \"demo/**/*.{ts,tsx,css,html}\"",
-    "format:fix": "prettier --write \"src/**/*.{ts,tsx,css}\" \"demo/**/*.{ts,tsx,css,html}\""
+    "format:fix": "prettier --write \"src/**/*.{ts,tsx,css}\" \"demo/**/*.{ts,tsx,css,html}\"",
+    "render-check": "bun run build:demo && bun scripts/render-check.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@happy-dom/global-registrator": "^20.9.0",
-    "@tailwindcss/cli": "^4.2.2",
     "@tailwindcss/vite": "^4.2.2",
     "@types/node": "^25.6.0",
     "@types/react": "^19.2.14",

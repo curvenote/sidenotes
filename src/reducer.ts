@@ -1,6 +1,6 @@
 import {
-  UIState,
-  UIActionTypes,
+  State,
+  Action,
   UI_CONNECT_SIDENOTE,
   UI_SELECT_SIDENOTE,
   UI_CONNECT_ANCHOR,
@@ -15,7 +15,7 @@ import {
   ANCHOR_BASE,
 } from './types';
 
-export const createInitialState = (padding = 10): UIState => ({
+export const createInitialState = (padding = 10): State => ({
   padding,
   selectedSidenote: null,
   selectedAnchor: null,
@@ -27,7 +27,7 @@ function getHeight(id: string) {
   return document.getElementById(id)?.offsetHeight ?? 0;
 }
 
-function getAnchorElement(state: UIState, sidenote: Sidenote): HTMLElement | null {
+function getAnchorElement(state: State, sidenote: Sidenote): HTMLElement | null {
   const allAnchors = [...(sidenote.inlineAnchors ?? []), ...(sidenote.baseAnchors ?? [])];
   for (let index = 0; index < allAnchors.length; index += 1) {
     const anchor = state.anchors[allAnchors[index]];
@@ -49,7 +49,7 @@ function getTopLeft(anchor: HTMLElement | null) {
   return { top, left };
 }
 
-function placeSidenotes(state: UIState, actionType: string): UIState {
+function placeSidenotes(state: State, actionType: string): State {
   if (actionType === UI_DESELECT_SIDENOTE) return state;
   type Loc = [string, { top: number; left: number; height: number }];
   let findMe: Loc | undefined;
@@ -97,7 +97,7 @@ function placeSidenotes(state: UIState, actionType: string): UIState {
   return { ...state, sidenotes };
 }
 
-export const uiReducer = (state: UIState, action: UIActionTypes): UIState => {
+export const uiReducer = (state: State, action: Action): State => {
   switch (action.type) {
     case UI_REPOSITION_SIDENOTES:
       return placeSidenotes(state, action.type);

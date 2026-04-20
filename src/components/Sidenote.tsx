@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect } from 'react';
 import classNames from 'classnames';
-import { connectSidenote, disconnectSidenote, selectSidenote } from '../store/ui/actions';
-import { sidenoteTop, isSidenoteSelected } from '../store/ui/selectors';
+import { connectSidenote, disconnectSidenote, selectSidenote } from '../actions';
+import { sidenoteTop, isSidenoteSelected } from '../selectors';
 import { useSidenotesDispatch, useSidenotesSelector } from '../context';
 
 type Props = {
@@ -36,11 +36,7 @@ export const Sidenote = ({ base, sidenote, children, className }: Props) => {
   return (
     <div
       id={sidenote}
-      className={classNames(
-        'sidenote absolute w-[280px] left-[10px] transition-all duration-300 ease-[cubic-bezier(0.655,0.18,0.3,1.255)]',
-        { '!-left-[10px] opacity-100 z-10': selected },
-        className,
-      )}
+      className={classNames('sidenote', { selected }, className)}
       onClick={onClick}
       style={{ top }}
     >

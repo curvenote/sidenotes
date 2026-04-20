@@ -7,10 +7,10 @@ import React, {
   useReducer,
   useRef,
 } from 'react';
-import uiReducer, { createInitialState } from './store/ui/reducer';
-import type { Dispatch, SidenotesUIActions, State } from './store/types';
+import reducer, { createInitialState } from './reducer';
+import type { Action, Dispatch, State } from './types';
 
-type SidenotesContextValue = {
+export type SidenotesContextValue = {
   state: State;
   dispatch: Dispatch;
   getState: () => State;
@@ -24,7 +24,7 @@ export type SidenotesProviderProps = {
 };
 
 export const SidenotesProvider = ({ padding = 10, children }: SidenotesProviderProps) => {
-  const [state, baseDispatch] = useReducer(uiReducer, undefined, () => createInitialState(padding));
+  const [state, baseDispatch] = useReducer(reducer, undefined, () => createInitialState(padding));
 
   const stateRef = useRef(state);
   useEffect(() => {
@@ -32,7 +32,7 @@ export const SidenotesProvider = ({ padding = 10, children }: SidenotesProviderP
   }, [state]);
   const getState = useCallback(() => stateRef.current, []);
 
-  const dispatch = useCallback<Dispatch>((action: SidenotesUIActions) => {
+  const dispatch = useCallback<Dispatch>((action: Action) => {
     baseDispatch(action);
   }, []);
 
@@ -41,7 +41,7 @@ export const SidenotesProvider = ({ padding = 10, children }: SidenotesProviderP
   return <SidenotesContext.Provider value={value}>{children}</SidenotesContext.Provider>;
 };
 
-function useSidenotesContext(): SidenotesContextValue {
+export function useSidenotesContext(): SidenotesContextValue {
   const ctx = useContext(SidenotesContext);
   if (!ctx) {
     throw new Error('Sidenotes components must be rendered inside a <SidenotesProvider>.');
@@ -59,9 +59,4 @@ export function useSidenotesDispatch(): Dispatch {
 
 export function useSidenotesSelector<T>(selector: (state: State) => T): T {
   return selector(useSidenotesContext().state);
-}
-
-export function useSidenotesStore(): { getState: () => State; dispatch: Dispatch } {
-  const { dispatch, getState } = useSidenotesContext();
-  return { dispatch, getState };
 }

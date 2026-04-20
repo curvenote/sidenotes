@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import classNames from 'classnames';
-import { connectAnchorBase } from '../store/ui/actions';
-import { isSidenoteSelected } from '../store/ui/selectors';
+import { connectAnchorBase } from '../actions';
+import { isSidenoteSelected } from '../selectors';
 import { useSidenotesDispatch, useSidenotesSelector } from '../context';
 
 type Props = {

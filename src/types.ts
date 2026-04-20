@@ -1,3 +1,5 @@
+import type { Dispatch as ReactDispatch } from 'react';
+
 export const ANCHOR_BASE = 'ANCHOR_BASE';
 
 export const UI_CONNECT_SIDENOTE = 'UI_CONNECT_SIDENOTE';
@@ -25,7 +27,7 @@ export type Anchor = {
   element?: HTMLElement;
 };
 
-export type UIState = {
+export type State = {
   padding: number;
   selectedSidenote: string | null;
   selectedAnchor: string | null;
@@ -83,7 +85,7 @@ export interface RepositionSidenotesAction {
   payload: Record<string, never>;
 }
 
-export type UIActionTypes =
+export type Action =
   | ConnectSidenoteAction
   | DisconnectSidenoteAction
   | ConnectAnchorAction
@@ -94,3 +96,5 @@ export type UIActionTypes =
   | DeselectSidenoteAction
   | RepositionSidenotesAction
   | ResetAllSidenotesAction;
+
+export type Dispatch = ReactDispatch<Action>;

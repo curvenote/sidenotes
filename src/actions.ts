@@ -10,14 +10,14 @@ import {
   UI_CONNECT_ANCHOR_BASE,
   UI_REPOSITION_SIDENOTES,
   UI_RESET_ALL_SIDENOTES,
-  UIActionTypes,
+  Action,
 } from './types';
 
-export function connectSidenote(sidenoteId: string, baseId?: string): UIActionTypes {
+export function connectSidenote(sidenoteId: string, baseId?: string): Action {
   return { type: UI_CONNECT_SIDENOTE, payload: { sidenoteId, baseId } };
 }
 
-export function connectAnchor(sidenoteId: string, element: string | HTMLElement): UIActionTypes {
+export function connectAnchor(sidenoteId: string, element: string | HTMLElement): Action {
   const anchorId = typeof element === 'string' ? element : uuid();
   if (typeof element !== 'string') {
     (element as unknown as { anchorId: string }).anchorId = anchorId;
@@ -32,41 +32,41 @@ export function connectAnchor(sidenoteId: string, element: string | HTMLElement)
   };
 }
 
-export function connectAnchorBase(anchorId: string, element: HTMLElement): UIActionTypes {
+export function connectAnchorBase(anchorId: string, element: HTMLElement): Action {
   (element as unknown as { anchorId: string }).anchorId = anchorId;
   return { type: UI_CONNECT_ANCHOR_BASE, payload: { anchorId, element } };
 }
 
-export function selectSidenote(sidenoteId: string): UIActionTypes {
+export function selectSidenote(sidenoteId: string): Action {
   return { type: UI_SELECT_SIDENOTE, payload: { sidenoteId } };
 }
 
-export function selectAnchor(anchor: string | HTMLElement): UIActionTypes | null {
+export function selectAnchor(anchor: string | HTMLElement): Action | null {
   const anchorId =
     typeof anchor === 'string' ? anchor : (anchor as unknown as { anchorId: string }).anchorId;
   if (!anchorId) return null;
   return { type: UI_SELECT_ANCHOR, payload: { anchorId } };
 }
 
-export function disconnectSidenote(sidenoteId: string): UIActionTypes {
+export function disconnectSidenote(sidenoteId: string): Action {
   return { type: UI_DISCONNECT_SIDENOTE, payload: { sidenoteId } };
 }
 
-export function disconnectAnchor(anchor: string | HTMLElement): UIActionTypes | null {
+export function disconnectAnchor(anchor: string | HTMLElement): Action | null {
   const anchorId =
     typeof anchor === 'string' ? anchor : (anchor as unknown as { anchorId: string }).anchorId;
   if (!anchorId) return null;
   return { type: UI_DISCONNECT_ANCHOR, payload: { anchorId } };
 }
 
-export function resetAllSidenotes(): UIActionTypes {
+export function resetAllSidenotes(): Action {
   return { type: UI_RESET_ALL_SIDENOTES, payload: {} };
 }
 
-export function deselectSidenote(): UIActionTypes {
+export function deselectSidenote(): Action {
   return { type: UI_DESELECT_SIDENOTE, payload: {} };
 }
 
-export function repositionSidenotes(): UIActionTypes {
+export function repositionSidenotes(): Action {
   return { type: UI_REPOSITION_SIDENOTES, payload: {} };
 }

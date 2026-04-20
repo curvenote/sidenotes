@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import classNames from 'classnames';
-import { connectAnchor, disconnectAnchor, selectAnchor } from '../store/ui/actions';
-import { isSidenoteSelected } from '../store/ui/selectors';
+import { connectAnchor, disconnectAnchor, selectAnchor } from '../actions';
+import { isSidenoteSelected } from '../selectors';
 import { useSidenotesDispatch, useSidenotesSelector } from '../context';
 
 type Props = {
@@ -36,15 +36,7 @@ export const InlineAnchor = ({ sidenote, children, className }: Props) => {
   );
 
   return (
-    <span
-      className={classNames(
-        'anchor bg-[var(--sidenoteAnchorColor,#f8e4b1)] hover:bg-[var(--sidenoteAnchorColorHover,#f7cf69b6)] cursor-pointer',
-        { 'bg-[var(--sidenoteAnchorColorSelected,#f5c955)]': selected },
-        className,
-      )}
-      onClick={onClick}
-      ref={setRef}
-    >
+    <span className={classNames('anchor', { selected }, className)} onClick={onClick} ref={setRef}>
       {children}
     </span>
   );

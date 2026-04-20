@@ -1,40 +1,15 @@
-import React, { useCallback, useEffect } from 'react';
+import React from 'react';
 import { createRoot } from 'react-dom/client';
-import {
-  SidenotesProvider,
-  Sidenote,
-  InlineAnchor,
-  AnchorBase,
-  useSidenotesDispatch,
-  actions,
-} from '../src';
+import { SidenotesProvider, Sidenote, InlineAnchor, AnchorBase, useSidenotes } from '../src';
 import './index.css';
 
 const baseAnchor = 'anchor';
 const blue = 'blue';
 const red = 'red';
 const green = 'green';
-const someId = 'some_id';
 
 function Demo() {
-  const dispatch = useSidenotesDispatch();
-
-  const deselect = useCallback(() => {
-    dispatch(actions.deselectSidenote());
-  }, [dispatch]);
-
-  const selectPlain = useCallback(
-    (event: React.MouseEvent<HTMLSpanElement>) => {
-      event.stopPropagation();
-      const action = actions.selectAnchor(someId);
-      if (action) dispatch(action);
-    },
-    [dispatch],
-  );
-
-  useEffect(() => {
-    dispatch(actions.connectAnchor(blue, someId));
-  }, [dispatch]);
+  const { deselect } = useSidenotes();
 
   return (
     <article onClick={deselect}>
@@ -56,21 +31,13 @@ function Demo() {
       </button>
       <AnchorBase anchor={baseAnchor} className="p-[10px] border-[3px] border-green-600">
         <p>
-          <InlineAnchor sidenote={blue} className="text-blue-600">
-            A sidenote
-          </InlineAnchor>{' '}
-          and{' '}
-          <InlineAnchor sidenote={red} className="text-red-600">
-            another red sidenote!
-          </InlineAnchor>
+          <InlineAnchor sidenote={blue}>A sidenote</InlineAnchor> and{' '}
+          <InlineAnchor sidenote={red}>another red sidenote!</InlineAnchor>
         </p>
         <ul className="list-disc pl-6">
           <li>
-            Must see all the{' '}
-            <InlineAnchor sidenote={red} className="text-red-600">
-              sidenotes
-            </InlineAnchor>{' '}
-            at once, so they should be in the margins!
+            Must see all the <InlineAnchor sidenote={red}>sidenotes</InlineAnchor> at once, so they
+            should be in the margins!
           </li>
           <li>
             Must be associated with a block (a small bit of content), that is versioned and must
@@ -78,29 +45,16 @@ function Demo() {
           </li>
         </ul>
         <p>
-          The sidenotes location{' '}
-          <InlineAnchor sidenote={blue} className="text-blue-600">
-            information
-          </InlineAnchor>{' '}
-          is a stand alone package.
+          The sidenotes location <InlineAnchor sidenote={blue}>information</InlineAnchor> is a stand
+          alone package.
         </p>
         <p>
           Has a mini reducer in there to keep internal state. Positions things based on height of
-          each{' '}
-          <InlineAnchor sidenote={blue} className="text-blue-600">
-            sidenote
-          </InlineAnchor>
-          . The animation can be handled by CSS.
+          each <InlineAnchor sidenote={blue}>sidenote</InlineAnchor>. The animation can be handled
+          by CSS.
         </p>
         <p>
-          <InlineAnchor sidenote={red} className="text-red-600">
-            Next sidenote!
-          </InlineAnchor>
-        </p>
-        <p>
-          <span id={someId} onClickCapture={selectPlain} className="text-blue-600 cursor-pointer">
-            You can also create using plain js if you want.
-          </span>
+          <InlineAnchor sidenote={red}>Next sidenote!</InlineAnchor>
         </p>
       </AnchorBase>
       <div className="sidenotes">
