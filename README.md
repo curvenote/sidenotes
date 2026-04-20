@@ -83,20 +83,22 @@ export default function App() {
 
 ### The `useSidenotes()` hook
 
-`useSidenotes()` is the public surface for interacting with sidenotes imperatively:
+`useSidenotes()` is the public surface for interacting with sidenotes imperatively. It is backed by a stable control context and **does not re-render when the selection changes** — read the current selection by calling the getter functions.
 
 ```ts
 const {
-  selectedSidenote, // id of the currently selected sidenote (or null)
-  selectedAnchor,   // id of the currently selected anchor (or null)
-  selectSidenote,   // (sidenoteId: string) => void
-  selectAnchor,     // (anchor: string | HTMLElement) => void
-  deselect,         // () => void
-  reposition,       // () => void — recompute positions (e.g. after layout change)
+  getSelectedSidenote, // () => string | null
+  getSelectedAnchor,   // () => string | null
+  selectSidenote,      // (sidenoteId: string) => void
+  selectAnchor,        // (anchor: string | HTMLElement) => void
+  deselect,            // () => void
+  reposition,          // () => void — recompute positions (e.g. after layout change)
 } = useSidenotes();
 ```
 
-Everything else (reducer, actions, selectors, dispatch) is internal.
+If you need to re-render a component when the selection changes, read the state directly from context — the getters are intentionally decoupled from React's re-render loop.
+
+Everything else (reducer, action creators, selectors, dispatch) is internal.
 
 ### Styling
 

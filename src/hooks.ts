@@ -1,10 +1,10 @@
 import { useCallback, useMemo } from 'react';
-import { useSidenotesContext } from './context';
+import { useSidenotesControl } from './context';
 import { deselectSidenote, repositionSidenotes, selectAnchor, selectSidenote } from './actions';
 
 export type UseSidenotes = {
-  selectedSidenote: string | null;
-  selectedAnchor: string | null;
+  getSelectedSidenote: () => string | null;
+  getSelectedAnchor: () => string | null;
   selectSidenote: (sidenoteId: string) => void;
   selectAnchor: (anchor: string | HTMLElement) => void;
   deselect: () => void;
@@ -12,7 +12,10 @@ export type UseSidenotes = {
 };
 
 export function useSidenotes(): UseSidenotes {
-  const { state, dispatch } = useSidenotesContext();
+  const { dispatch, getState } = useSidenotesControl();
+
+  const getSelectedSidenote = useCallback(() => getState().selectedSidenote, [getState]);
+  const getSelectedAnchor = useCallback(() => getState().selectedAnchor, [getState]);
 
   const selectSidenoteCb = useCallback(
     (sidenoteId: string) => dispatch(selectSidenote(sidenoteId)),
@@ -32,16 +35,16 @@ export function useSidenotes(): UseSidenotes {
 
   return useMemo(
     () => ({
-      selectedSidenote: state.selectedSidenote,
-      selectedAnchor: state.selectedAnchor,
+      getSelectedSidenote,
+      getSelectedAnchor,
       selectSidenote: selectSidenoteCb,
       selectAnchor: selectAnchorCb,
       deselect,
       reposition,
     }),
     [
-      state.selectedSidenote,
-      state.selectedAnchor,
+      getSelectedSidenote,
+      getSelectedAnchor,
       selectSidenoteCb,
       selectAnchorCb,
       deselect,

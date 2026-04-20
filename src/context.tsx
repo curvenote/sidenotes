@@ -10,13 +10,13 @@ import React, {
 import reducer, { createInitialState } from './reducer';
 import type { Action, Dispatch, State } from './types';
 
-export type SidenotesContextValue = {
-  state: State;
+type ControlValue = {
   dispatch: Dispatch;
   getState: () => State;
 };
 
-const SidenotesContext = createContext<SidenotesContextValue | null>(null);
+const StateContext = createContext<State | null>(null);
+const ControlContext = createContext<ControlValue | null>(null);
 
 export type SidenotesProviderProps = {
   padding?: number;
@@ -30,33 +30,43 @@ export const SidenotesProvider = ({ padding = 10, children }: SidenotesProviderP
   useEffect(() => {
     stateRef.current = state;
   }, [state]);
+
   const getState = useCallback(() => stateRef.current, []);
+  const dispatch = useCallback<Dispatch>((action: Action) => baseDispatch(action), []);
 
-  const dispatch = useCallback<Dispatch>((action: Action) => {
-    baseDispatch(action);
-  }, []);
+  const control = useMemo<ControlValue>(() => ({ dispatch, getState }), [dispatch, getState]);
 
-  const value = useMemo(() => ({ state, dispatch, getState }), [state, dispatch, getState]);
-
-  return <SidenotesContext.Provider value={value}>{children}</SidenotesContext.Provider>;
+  return (
+    <ControlContext.Provider value={control}>
+      <StateContext.Provider value={state}>{children}</StateContext.Provider>
+    </ControlContext.Provider>
+  );
 };
 
-export function useSidenotesContext(): SidenotesContextValue {
-  const ctx = useContext(SidenotesContext);
-  if (!ctx) {
+function useSidenotesStateContext(): State {
+  const s = useContext(StateContext);
+  if (s == null) {
     throw new Error('Sidenotes components must be rendered inside a <SidenotesProvider>.');
   }
-  return ctx;
+  return s;
+}
+
+export function useSidenotesControl(): ControlValue {
+  const c = useContext(ControlContext);
+  if (!c) {
+    throw new Error('Sidenotes components must be rendered inside a <SidenotesProvider>.');
+  }
+  return c;
 }
 
 export function useSidenotesState(): State {
-  return useSidenotesContext().state;
+  return useSidenotesStateContext();
 }
 
 export function useSidenotesDispatch(): Dispatch {
-  return useSidenotesContext().dispatch;
+  return useSidenotesControl().dispatch;
 }
 
 export function useSidenotesSelector<T>(selector: (state: State) => T): T {
-  return selector(useSidenotesContext().state);
+  return selector(useSidenotesStateContext());
 }
