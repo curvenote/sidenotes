@@ -19,6 +19,6 @@
     "noEmit": true,
     "types": ["node"]
   },
-  "include": ["src/**/*", "demo/**/*", "vite.config.ts", "vite.lib.config.ts"],
-  "exclude": ["dist", "dist-demo", "node_modules"]
+  "include": ["src/**/*", "demo/**/*", "vite.config.ts"],
+  "exclude": ["dist", "dist-demo", "node_modules", "scripts"]
 }

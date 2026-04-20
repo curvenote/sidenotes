@@ -1,6 +1,7 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+@source "../src/**/*.{ts,tsx}";
+@source "./**/*.{ts,tsx,html}";
 
 @layer base {
   article {

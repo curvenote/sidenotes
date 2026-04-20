@@ -1,4 +1,12 @@
-import React, { createContext, useCallback, useContext, useMemo, useReducer, useRef } from 'react';
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useReducer,
+  useRef,
+} from 'react';
 import uiReducer, { createInitialState } from './store/ui/reducer';
 import type { Dispatch, SidenotesUIActions, State } from './store/types';
 
@@ -19,7 +27,9 @@ export const SidenotesProvider = ({ padding = 10, children }: SidenotesProviderP
   const [state, baseDispatch] = useReducer(uiReducer, undefined, () => createInitialState(padding));
 
   const stateRef = useRef(state);
-  stateRef.current = state;
+  useEffect(() => {
+    stateRef.current = state;
+  }, [state]);
   const getState = useCallback(() => stateRef.current, []);
 
   const dispatch = useCallback<Dispatch>((action: SidenotesUIActions) => {
